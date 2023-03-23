@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.EditProfileActivity">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvIMGProfile"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:layout_gravity="center"
+            app:cardCornerRadius="200dp">
+
+            <ImageView
+                android:id="@+id/imgedtProfile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"></ImageView>
+        </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="220dp">
+
+            <LinearLayout
+                android:id="@+id/inf_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingBottom="20dp">
+
+
+                <TextView
+                    android:id="@+id/btn_editprofile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="#00000000"
+                    android:drawableLeft="@drawable/icon_edit"
+                    android:gravity="center"
+                    android:onClick="edit_information"
+                    android:text="Chỉnh sửa thông tin cá nhân"
+                    android:textColor="#000" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/boder_gachnoi">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="#00000000"
+                            android:gravity="left"
+                            android:onClick="edit_information"
+                            android:text="    Update Cover Media"
+                            android:textColor="#000" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_centerHorizontal="true"
+                                    android:src="@drawable/icon_cloud_upload" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginVertical="10dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:background="#00000000"
+                                    android:gravity="center_horizontal"
+                                    android:onClick="edit_information"
+                                    android:text="Let's upload photos and videos"
+                                    android:textColor="#000" />
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/edt_btn_openCam"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:drawableLeft="@drawable/icon_cloud_upload"
+                                android:text="  Open\ncamera"
+                                android:textColor="@color/black" />
+
+                            <Button
+                                android:id="@+id/edt_btn_openGal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:drawableLeft="@drawable/icon_cloud_upload"
+                                android:text="  Open\ngallery"
+                                android:textColor="@color/black" />
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/edt_pr_img"
+                                android:layout_width="match_parent"
+                                android:layout_height="200dp"></ImageView>
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/btn_Saveedt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cập nhật"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+
+</RelativeLayout>

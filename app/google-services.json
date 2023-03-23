@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "252717215113",
+    "project_id": "ute-app-hdkn",
+    "storage_bucket": "ute-app-hdkn.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:252717215113:android:6df121f43c87a531500558",
+        "android_client_info": {
+          "package_name": "com.example.uteapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "252717215113-j3u09221ms6jq7aak7gu36hvmkocsapn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.uteapp",
+            "certificate_hash": "d1733baebe01edc75795ca79350f7f8ed70933ff"
+          }
+        },
+        {
+          "client_id": "252717215113-mpfumbbipj0hh98h593oplfnfoqgfn06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgWIcCaONXCPYd2O-iKCXsOfx38zt67-k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "252717215113-mpfumbbipj0hh98h593oplfnfoqgfn06.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
