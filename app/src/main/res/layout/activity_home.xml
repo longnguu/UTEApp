@@ -96,15 +96,17 @@
                 android:id="@+id/recycleViewMainSearch" />
         </androidx.cardview.widget.CardView>
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/viewpg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/navnav"
-            android:layout_marginBottom="0dp"
-            tools:ignore="SpeakableTextPresentCheck"></androidx.viewpager.widget.ViewPager>
+    <androidx.viewpager.widget.ViewPager
+        android:background="@drawable/draw_boder_radius"
+        android:id="@+id/viewpg"
+        android:layout_marginTop="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/navnav"
+        android:layout_marginBottom="-2dp"
+        tools:ignore="SpeakableTextPresentCheck"></androidx.viewpager.widget.ViewPager>
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
+    <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/navnav"
             android:layout_width="match_parent"
             android:layout_height="50dp"
