@@ -14,7 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.uteapp.Activity.EditProfileActivity;
+import com.example.uteapp.Model.Data;
 import com.example.uteapp.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +29,9 @@ import com.example.uteapp.R;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
+
+    DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
+    ImageView avt,bgr;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -69,5 +79,29 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        Anhxa(view);
+        databaseReference.child("users").child(Data.dataPhone).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String avtt = (String) snapshot.child("imgUS").getValue();
+                String bgrr = String.valueOf(snapshot.child("anhnen").getValue());
+                Picasso.get().load(avtt).into(avt);
+                Picasso.get().load(bgrr).into(bgr);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public void Anhxa(View view){
+        avt=view.findViewById(R.id.avtHome);
+        bgr=view.findViewById(R.id.backgroundHome);
     }
 }

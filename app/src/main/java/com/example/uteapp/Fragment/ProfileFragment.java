@@ -10,10 +10,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.uteapp.Activity.EditProfileActivity;
+import com.example.uteapp.Activity.ProfileActivity;
 import com.example.uteapp.R;
 
 /**
@@ -23,8 +25,6 @@ import com.example.uteapp.R;
  */
 public class ProfileFragment extends Fragment {
 
-    TextView prProfile,prEmail,prPhone,prAddress,prSignOut;
-    ImageView imgProfile,imgBackground;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -76,23 +76,13 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        AnhXa(view);
-        prProfile = (TextView)  view.findViewById(R.id.prEditProfile);
-        prProfile.setOnClickListener(new View.OnClickListener() {
+        Button btn=view.findViewById(R.id.btn_sa);
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(getActivity(), ProfileActivity.class));
             }
         });
     }
 
-    private void AnhXa(View view) {
-        prProfile = (TextView)  view.findViewById(R.id.prEditProfile);
-        prEmail=(TextView) view.findViewById(R.id.prEmailAddress);
-        prPhone=(TextView) view.findViewById(R.id.prPhoneNumber);
-        prAddress = (TextView) view.findViewById(R.id.prResidentialAddress);
-        imgProfile=(ImageView) view.findViewById(R.id.imgProfile);
-        prSignOut =(TextView) view.findViewById(R.id.prSignOut);
-    }
 }

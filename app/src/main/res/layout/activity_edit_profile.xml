@@ -19,6 +19,7 @@
                 android:id="@+id/imgedtProfile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleType="centerCrop"
                 android:layout_centerVertical="true"></ImageView>
         </androidx.cardview.widget.CardView>
 
@@ -136,12 +137,10 @@
                             <ImageView
                                 android:id="@+id/edt_pr_img"
                                 android:layout_width="match_parent"
-                                android:layout_height="200dp"></ImageView>
+                                android:layout_height="200dp"
+                                android:layout_marginBottom="10dp"></ImageView>
                         </RelativeLayout>
-
                     </LinearLayout>
-
-
                 </RelativeLayout>
 
                 <Button
