@@ -209,9 +209,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
     private void selectIMG() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*"); // allow both images and videos
         startActivityForResult(intent,GALLEYRY_REQUESR_CODE);
     }
     private void selectIMGAVT() {
