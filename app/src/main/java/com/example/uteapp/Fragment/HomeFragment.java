@@ -1,28 +1,38 @@
 package com.example.uteapp.Fragment;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
-
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.uteapp.Activity.EditProfileActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+
+import com.example.uteapp.Activity.AddProductActivity;
+import com.example.uteapp.Adapter.AddPicVideoAdapter;
 import com.example.uteapp.Adapter.TabLayoutAdapter;
 import com.example.uteapp.Model.Data;
 import com.example.uteapp.R;
@@ -32,7 +42,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,9 +59,18 @@ public class HomeFragment extends Fragment {
     DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
     ImageView avt,bgr;
     TextView name;
-    TabLayoutAdapter adapter;
+    TabLayoutAdapter tabLayoutAdapter;
     TabLayout tabLayout;
     CardView btn_choose;
+    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+    StorageReference storageReference= firebaseStorage.getReference();
+    ProgressDialog progressDialog;
+    int kt=0;
+
+
+    private List<Uri> mediaUris = new ArrayList<>();
+    AddPicVideoAdapter addPicVideoAdapter = new AddPicVideoAdapter(mediaUris,getContext());
+    final int GALLERY_REQUEST_CODE=124;
     private int[] tabIcons = {
             R.drawable.icon_view_module,
             R.drawable.icon_info
@@ -104,6 +128,9 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Anhxa(view);
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading...");
         databaseReference.child("users").child(Data.dataPhone).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -127,14 +154,17 @@ public class HomeFragment extends Fragment {
                 showDialog();
             }
         });
-        adapter = new TabLayoutAdapter(getActivity().getSupportFragmentManager());
-        adapter.addFragment(new Tab1Fragment(),"");
-        adapter.addFragment(new Tab2Fragment(), "");
+        tabLayoutAdapter = new TabLayoutAdapter(getActivity().getSupportFragmentManager());
+        if (tabLayoutAdapter.getCount()==0){
+            tabLayoutAdapter.addFragment(new Tab1Fragment(),"");
+            tabLayoutAdapter.addFragment(new Tab2Fragment(), "");
+        }
+
 
 
         tabLayout = view.findViewById(R.id.frhome_tab_layout);
         ViewPager viewPager = view.findViewById(R.id.frhome_view_pager);
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(tabLayoutAdapter);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
@@ -157,22 +187,37 @@ public class HomeFragment extends Fragment {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.layout_bottom_sheet);
 
-        LinearLayout editLayout = dialog.findViewById(R.id.choose_1);
-        LinearLayout shareLayout = dialog.findViewById(R.id.choose_2);
-        LinearLayout uploadLayout = dialog.findViewById(R.id.choose_3);
-        LinearLayout printLayout = dialog.findViewById(R.id.choose_4);
+        LinearLayout choose1 = dialog.findViewById(R.id.choose_1);
+        LinearLayout choose2 = dialog.findViewById(R.id.choose_2);
+        LinearLayout choose3 = dialog.findViewById(R.id.choose_3);
+        LinearLayout choose4 = dialog.findViewById(R.id.choose_4);
 
-        editLayout.setOnClickListener(new View.OnClickListener() {
+        choose1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                final Dialog dialogAddPicVideo = new Dialog(getActivity());
                 dialog.dismiss();
-                Toast.makeText(getActivity(),"Edit is Clicked",Toast.LENGTH_SHORT).show();
+                dialogAddPicVideo.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialogAddPicVideo.setContentView(R.layout.dialog_upload_picvideos_1);
+                dialogAddPicVideo.show();
+                dialogAddPicVideo.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                dialogAddPicVideo.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialogAddPicVideo.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                dialogAddPicVideo.getWindow().setGravity(Gravity.BOTTOM);
+                Button btn_chonAnh = dialogAddPicVideo.findViewById(R.id.edt_btn_openGal);
+                btn_chonAnh.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialogAddPicVideo.dismiss();
+                        selectIMG();
+                    }
+                });
+
 
             }
         });
 
-        shareLayout.setOnClickListener(new View.OnClickListener() {
+        choose2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -182,7 +227,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        uploadLayout.setOnClickListener(new View.OnClickListener() {
+        choose3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -192,12 +237,12 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        printLayout.setOnClickListener(new View.OnClickListener() {
+        choose4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 dialog.dismiss();
-                Toast.makeText(getActivity(),"Print is Clicked",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), AddProductActivity.class));
 
             }
         });
@@ -209,5 +254,115 @@ public class HomeFragment extends Fragment {
         dialog.getWindow().setGravity(Gravity.BOTTOM);
 
     }
+    private void selectIMG() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/* video/*"); // allow both images and videos
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivityForResult(intent, GALLERY_REQUEST_CODE);
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GALLERY_REQUEST_CODE && resultCode == getActivity().RESULT_OK && data != null) {
+            Uri selectedMediaUri = data.getData();
+            String mimeType = getActivity().getContentResolver().getType(selectedMediaUri);
+            if (mimeType.startsWith("image")) {
+                // This is an image
+                Uri imageUri = data.getData();
+                mediaUris.add(imageUri);
+            } else if (mimeType.startsWith("video")) {
+                // This is a video
+                Uri videoUri = data.getData();
+                mediaUris.add(videoUri);
+            }
+            System.out.println(mediaUris.size());
+            addPicVideoAdapter.update(mediaUris);
+            final Dialog dialogAddPicVideo1 = new Dialog(getActivity());
+            dialogAddPicVideo1.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialogAddPicVideo1.setContentView(R.layout.dialog_upload_picvideos_2);
+            RecyclerView recyclerView = dialogAddPicVideo1.findViewById(R.id.addpicvideo_recyclerView);
+            addPicVideoAdapter = new AddPicVideoAdapter(mediaUris,getContext());
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(addPicVideoAdapter);
+            System.out.println(mediaUris.size());
+            if (!dialogAddPicVideo1.isShowing())
+                dialogAddPicVideo1.show();
+            TextView btn_add = dialogAddPicVideo1.findViewById(R.id.addpicvideos_2_add);
+            TextView btnSave=dialogAddPicVideo1.findViewById(R.id.addpicvideo_btn_save);
+            TextView btnCancel = dialogAddPicVideo1.findViewById(R.id.addpicvideo_btn_cancel);
+            btnCancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mediaUris.clear();
+                    addPicVideoAdapter.update(mediaUris);
+                    dialogAddPicVideo1.dismiss();
+                }
+            });
+            btnSave.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    progressDialog.show();
+                    List<String> linkList = new ArrayList<>();
+                    String time= String.valueOf(System.currentTimeMillis());
+                    kt=0;
+                    for (int i = 0; i < mediaUris.size(); i++) {
+                        Uri mediaUri = mediaUris.get(i);
+                        int j=i;
+                        String fileName = "media_" + System.currentTimeMillis() + "_" + i;
+                        StorageReference fileRef = storageReference.child(fileName);
+                        fileRef.putFile(mediaUri)
+                                .addOnSuccessListener(taskSnapshot -> {
+                                    // File uploaded successfully
+                                    fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                                        // Get download URL
+                                        String downloadUrl = uri.toString();
+                                        String mimeType = getContext().getContentResolver().getType(mediaUri);
+                                        if (mimeType.startsWith("image")) {
+                                            databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("l").setValue("img");
+                                            databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("link").setValue(downloadUrl);
+                                        }else{
+                                            databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("l").setValue("video");
+                                            databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("link").setValue(downloadUrl);
+                                        }
+                                        kt++;
+                                        linkList.add(downloadUrl);
+                                        System.out.println(downloadUrl);
+                                    });
+                                })
+                                .addOnFailureListener(exception -> {
+                                    // File upload failed
+                                    Log.e(TAG, "File upload failed: " + exception.getMessage());
+                                    kt=-1;
+                                    Toast.makeText(getContext(),"Đã xảy ra lỗi, vui lòng thử lại",Toast.LENGTH_SHORT).show();
+                                    progressDialog.dismiss();
+                                }).addOnCompleteListener(task -> {
+                                    // File upload completed (regardless of success or failure)
+                                    if (kt==mediaUris.size()-1) {
+                                        Toast.makeText(getContext(), "Thêm thành công", Toast.LENGTH_SHORT).show();
+                                        progressDialog.dismiss();
+                                        dialogAddPicVideo1.dismiss();
+                                    }
+                                });
+                    }
+
+                }
+            });
+            btn_add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    selectIMG();
+                }
+            });
+
+            dialogAddPicVideo1.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialogAddPicVideo1.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialogAddPicVideo1.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+            dialogAddPicVideo1.getWindow().setGravity(Gravity.BOTTOM);
+            dialogAddPicVideo1.setCancelable(false);
+
+        }
+    }
 }

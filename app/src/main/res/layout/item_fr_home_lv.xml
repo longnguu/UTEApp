@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -15,32 +15,88 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:layout_weight="1">
-                <ImageView
-                    android:layout_margin="5dp"
+                <RelativeLayout
+                    android:id="@+id/view1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
-                <ImageView
-                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_margin="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/a1"/>
+
+                    <VideoView
+                        android:id="@+id/v1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="5dp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/view2"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_margin="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/a2"/>
+                    <VideoView
+                        android:layout_margin="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/v2"/>
+                </RelativeLayout>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/liner_gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:layout_weight="1">
-                <ImageView
-                    android:layout_margin="5dp"
+                <RelativeLayout
+                    android:id="@+id/view3"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
-                <ImageView
-                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_margin="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/a3"/>
+                    <VideoView
+                        android:layout_margin="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/v3"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/view4"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/a4"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:src="@drawable/icon_add" />
+                    <VideoView
+                        android:layout_margin="5dp"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/v4"/>
+                </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
         <TextView

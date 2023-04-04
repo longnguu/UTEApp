@@ -23,12 +23,9 @@
                 android:layout_centerVertical="true"></ImageView>
         </androidx.cardview.widget.CardView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
         <ScrollView
+            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="220dp">
@@ -52,7 +49,7 @@
                     android:drawableLeft="@drawable/icon_edit"
                     android:gravity="center"
                     android:onClick="edit_information"
-                    android:text="Chỉnh sửa thông tin cá nhân"
+                    android:text="Edit Profile"
                     android:textColor="#000" />
 
                 <RelativeLayout
@@ -143,15 +140,88 @@
                     </LinearLayout>
                 </RelativeLayout>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Add description"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:background="@drawable/border_bo"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"/>
+                <LinearLayout
+
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_bo"
+                    android:orientation="vertical">
+                    <EditText
+                        android:padding="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/icon_email"/>
+                    <EditText
+                        android:id="@+id/edt_pr_dateT"
+                        android:padding="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:editable="false"
+                        android:text="   Date of birth *"
+                        android:drawableLeft="@drawable/icon_date"/>
+                    <DatePicker
+                        android:visibility="gone"
+                        android:id="@+id/datePicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <EditText
+                        android:id="@+id/edt_pr_genderT"
+                        android:padding="10dp"
+                        android:editable="false"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="   Gender *"
+                        android:drawableLeft="@drawable/icon_gender"/>
+                    <RadioGroup
+                        android:visibility="gone"
+                        android:id="@+id/radioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/radioButton1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Male"/>
+
+                        <RadioButton
+                            android:id="@+id/radioButton2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Female"/>
+                    </RadioGroup>
+                    <EditText
+                        android:padding="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tester"
+                        android:textStyle="bold"
+                        android:textSize="18dp"
+                        android:textColor="@color/black"/>
+                </LinearLayout>
                 <Button
                     android:id="@+id/btn_Saveedt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Cập nhật"
+                    android:text="Save"
                     android:textColor="@color/black" />
+
             </LinearLayout>
         </ScrollView>
-    </LinearLayout>
-
-
 </RelativeLayout>

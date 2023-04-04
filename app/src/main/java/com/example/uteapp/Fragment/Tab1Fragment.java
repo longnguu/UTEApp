@@ -2,13 +2,29 @@ package com.example.uteapp.Fragment;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.uteapp.Adapter.Tab1Adapter;
+import com.example.uteapp.Model.Data;
+import com.example.uteapp.Model.PicVideos;
 import com.example.uteapp.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +32,10 @@ import com.example.uteapp.R;
  * create an instance of this fragment.
  */
 public class Tab1Fragment extends Fragment {
+    DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
+    Tab1Adapter adapter;
+    List<PicVideos> data = new ArrayList<PicVideos>();
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,5 +82,50 @@ public class Tab1Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_tab1, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        databaseReference.child("Media").child(Data.dataPhone).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int i=0;
+                data.clear();
+                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    i++;
+                    PicVideos picVideos = new PicVideos();
+                    for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                        picVideos.setLink(dataSnapshot1.child("link").getValue(String.class));
+                        picVideos.setLoai(dataSnapshot1.child("l").getValue(String.class));
+                    }
+                    data.add(picVideos);
+                }
+                adapter.update(data);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+        System.out.println(data.size());
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_tab1);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return 1;
+            }
+        });
+
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new Tab1Adapter(data,getContext());
+        adapter.update(data);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+
     }
 }
