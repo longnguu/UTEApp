@@ -76,6 +76,8 @@ public class SignInActivity extends AppCompatActivity {
                                             intent.putExtra("mobile",mobile);
                                             intent.putExtra("acti","Login");
                                             Data.dataPhone= String.valueOf(Phone);
+                                            Data.dataAVT=String.valueOf(imgUS);
+                                            Data.dataBGR=String.valueOf(anhnen);
                                             progressDialog.dismiss();
                                             System.out.println("abc"+mobile);
                                             startActivity(intent);

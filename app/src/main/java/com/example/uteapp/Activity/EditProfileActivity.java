@@ -1,5 +1,6 @@
 package com.example.uteapp.Activity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +14,11 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +36,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.soundcloud.android.crop.CropImageView;
+import com.squareup.picasso.Picasso;
 
 
 import java.io.ByteArrayOutputStream;
@@ -51,7 +57,11 @@ public class EditProfileActivity extends AppCompatActivity {
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
     User us;
     Uri uri;
+    EditText date,gender;
+    DatePicker datePicker;
+    RadioGroup radioGroup;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +81,31 @@ public class EditProfileActivity extends AppCompatActivity {
         img_media=findViewById(R.id.edt_pr_img);
         img_edt_avt=findViewById(R.id.imgedtProfile);
         btn_save=findViewById(R.id.btn_Saveedt);
+        date=findViewById(R.id.edt_pr_dateT);
+        gender=findViewById(R.id.edt_pr_genderT);
+        datePicker=findViewById(R.id.datePicker);
+        radioGroup=findViewById(R.id.radioGroup);
+        Picasso.get().load(Data.dataAVT).into(img_edt_avt);
+        Picasso.get().load(Data.dataBGR).into(img_media);
+
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (datePicker.getVisibility()==View.GONE)
+                    datePicker.setVisibility(View.VISIBLE);
+                else datePicker.setVisibility(View.GONE);
+            }
+        });
+        gender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (radioGroup.getVisibility()==View.GONE)
+                    radioGroup.setVisibility(View.VISIBLE);
+                else radioGroup.setVisibility(View.GONE);
+            }
+        });
+
+
 
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,9 +244,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
     private void selectIMG() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*"); // allow both images and videos
         startActivityForResult(intent,GALLEYRY_REQUESR_CODE);
     }
     private void selectIMGAVT() {
@@ -249,6 +283,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private void GoiIntent() {
         databaseReference.child("users").child(Data.dataPhone).child("imgUS").setValue(imageUrl);
         databaseReference.child("users").child(Data.dataPhone).child("anhnen").setValue(imageUrl1);
+        Data.dataAVT=imageUrl;
+        Data.dataBGR=imageUrl1;
     }
 
 }

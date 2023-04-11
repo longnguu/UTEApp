@@ -97,7 +97,6 @@
         </androidx.cardview.widget.CardView>
 
     <androidx.viewpager.widget.ViewPager
-        android:background="@drawable/draw_boder_radius"
         android:id="@+id/viewpg"
         android:layout_marginTop="80dp"
         android:layout_width="match_parent"
