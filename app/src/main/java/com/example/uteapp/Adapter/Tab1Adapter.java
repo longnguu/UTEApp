@@ -1,6 +1,7 @@
 package com.example.uteapp.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.uteapp.Activity.ReelActivity;
 import com.example.uteapp.Model.PicVideos;
 import com.example.uteapp.R;
 import com.squareup.picasso.Picasso;
@@ -25,7 +27,7 @@ public class Tab1Adapter extends RecyclerView.Adapter<Tab1Adapter.Tab1AdapterVie
     private List<PicVideos> mData;
     private Context context;
 
-    public Tab1Adapter(List<PicVideos> mData, Context context) {
+    public  Tab1Adapter(List<PicVideos> mData, Context context) {
         this.mData = mData;
         this.context = context;
     }
@@ -41,17 +43,14 @@ public class Tab1Adapter extends RecyclerView.Adapter<Tab1Adapter.Tab1AdapterVie
     @Override
     public void onBindViewHolder(@NonNull Tab1Adapter.Tab1AdapterViewHolder holder, int position) {
        PicVideos data= mData.get(position);
-
-
-
        System.out.println(data.getSize());
-        holder.c4.setVisibility(View.GONE);
-        holder.c3.setVisibility(View.GONE);
-        holder.c2.setVisibility(View.GONE);
-        holder.c1.setVisibility(View.GONE);
-        if (data.getSize()==1){
-            holder.linearLayout.setVisibility(View.GONE);
-        }
+//        holder.c4.setVisibility(View.GONE);
+//        holder.c3.setVisibility(View.GONE);
+//        holder.c2.setVisibility(View.GONE);
+//        holder.c1.setVisibility(View.GONE);
+//        if (data.getSize()==1){
+//            holder.linearLayout.setVisibility(View.GONE);
+//        }
 
        if (data.getSize()>=1){
            holder.c1.setVisibility(View.VISIBLE);
@@ -94,7 +93,7 @@ public class Tab1Adapter extends RecyclerView.Adapter<Tab1Adapter.Tab1AdapterVie
             }
         }
         if (data.getSize()>=4){
-            holder.c3.setVisibility(View.VISIBLE);
+            holder.c4.setVisibility(View.VISIBLE);
             String dataVideo=data.getLink().get(3);
             if (data.getLoai().get(3).equals("video")){
                 holder.a4.setVisibility(View.GONE);
@@ -106,6 +105,13 @@ public class Tab1Adapter extends RecyclerView.Adapter<Tab1Adapter.Tab1AdapterVie
                 Picasso.get().load(dataVideo).into(holder.a4);
             }
         }
+        holder.toreels.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent =new Intent(context, ReelActivity.class);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -117,7 +123,7 @@ public class Tab1Adapter extends RecyclerView.Adapter<Tab1Adapter.Tab1AdapterVie
         RelativeLayout c1,c2,c3,c4;
         ImageView a1,a2,a3,a4;
         VideoView v1,v2,v3,v4;
-        LinearLayout linearLayout;
+        LinearLayout linearLayout,toreels;
         public Tab1AdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             c1=itemView.findViewById(R.id.view1);
@@ -136,6 +142,7 @@ public class Tab1Adapter extends RecyclerView.Adapter<Tab1Adapter.Tab1AdapterVie
             v4=itemView.findViewById(R.id.v4);
 
             linearLayout=itemView.findViewById(R.id.liner_gone);
+            toreels = itemView.findViewById(R.id.to_reels);
         }
     }
     public void update(List<PicVideos> mData){
@@ -148,6 +155,5 @@ public class Tab1Adapter extends RecyclerView.Adapter<Tab1Adapter.Tab1AdapterVie
         v.setMediaController(mediaController);
         Uri videoUri = Uri.parse(data);
         v.setVideoURI(videoUri);
-        v.start();
     }
 }

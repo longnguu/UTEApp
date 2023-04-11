@@ -35,6 +35,7 @@ import com.example.uteapp.Activity.AddProductActivity;
 import com.example.uteapp.Adapter.AddPicVideoAdapter;
 import com.example.uteapp.Adapter.TabLayoutAdapter;
 import com.example.uteapp.Model.Data;
+import com.example.uteapp.Model.PicVideos;
 import com.example.uteapp.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -62,9 +63,11 @@ public class HomeFragment extends Fragment {
     TabLayoutAdapter tabLayoutAdapter;
     TabLayout tabLayout;
     CardView btn_choose;
+    ViewPager viewPager;
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     StorageReference storageReference= firebaseStorage.getReference();
     ProgressDialog progressDialog;
+    List<PicVideos> data = new ArrayList<PicVideos>();
     int kt=0;
 
 
@@ -148,6 +151,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+
         btn_choose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,7 +168,7 @@ public class HomeFragment extends Fragment {
 
 
         tabLayout = view.findViewById(R.id.frhome_tab_layout);
-        ViewPager viewPager = view.findViewById(R.id.frhome_view_pager);
+        viewPager = view.findViewById(R.id.frhome_view_pager);
         viewPager.setAdapter(tabLayoutAdapter);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
@@ -288,8 +293,11 @@ public class HomeFragment extends Fragment {
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(addPicVideoAdapter);
             System.out.println(mediaUris.size());
-            if (!dialogAddPicVideo1.isShowing())
+            if (!dialogAddPicVideo1.isShowing()) {
+                dialogAddPicVideo1.dismiss();
                 dialogAddPicVideo1.show();
+            }
+
             TextView btn_add = dialogAddPicVideo1.findViewById(R.id.addpicvideos_2_add);
             TextView btnSave=dialogAddPicVideo1.findViewById(R.id.addpicvideo_btn_save);
             TextView btnCancel = dialogAddPicVideo1.findViewById(R.id.addpicvideo_btn_cancel);
@@ -324,6 +332,8 @@ public class HomeFragment extends Fragment {
                                             databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("l").setValue("img");
                                             databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("link").setValue(downloadUrl);
                                         }else{
+                                            databaseReference.child("Videos_Account").child(Data.dataPhone).child(time).child("url").setValue(downloadUrl);
+                                            databaseReference.child("Videos").push().child("url").setValue(downloadUrl);
                                             databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("l").setValue("video");
                                             databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("link").setValue(downloadUrl);
                                         }
@@ -365,4 +375,5 @@ public class HomeFragment extends Fragment {
 
         }
     }
+
 }

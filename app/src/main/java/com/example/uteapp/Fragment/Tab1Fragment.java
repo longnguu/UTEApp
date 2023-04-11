@@ -49,6 +49,11 @@ public class Tab1Fragment extends Fragment {
     public Tab1Fragment() {
         // Required empty public constructor
     }
+    public Tab1Fragment(List<PicVideos> data) {
+        // Required empty public constructor
+        this.data=data;
+        adapter=new Tab1Adapter(data,getContext());
+    }
 
     /**
      * Use this factory method to create a new instance of
@@ -114,12 +119,12 @@ public class Tab1Fragment extends Fragment {
         System.out.println(data.size());
         RecyclerView recyclerView = view.findViewById(R.id.recycler_tab1);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false);
-        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                return 1;
-            }
-        });
+//        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+//            @Override
+//            public int getSpanSize(int position) {
+//                return 1;
+//            }
+//        });
 
         recyclerView.setLayoutManager(layoutManager);
         adapter = new Tab1Adapter(data,getContext());

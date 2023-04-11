@@ -32,7 +32,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         AnhXa();
-        databaseReference.child("users").child(Data.dataPhone).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.child("users").child(Data.dataPhone).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Picasso.get().load(snapshot.child("imgUS").getValue().toString()).into(imgProfile);
@@ -50,6 +50,15 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ProfileActivity.this, EditProfileActivity.class);
                 startActivity(intent);
+            }
+        });
+        prSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProfileActivity.this, SignInActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             }
         });
     }

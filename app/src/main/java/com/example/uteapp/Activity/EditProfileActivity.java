@@ -36,6 +36,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.soundcloud.android.crop.CropImageView;
+import com.squareup.picasso.Picasso;
 
 
 import java.io.ByteArrayOutputStream;
@@ -84,6 +85,8 @@ public class EditProfileActivity extends AppCompatActivity {
         gender=findViewById(R.id.edt_pr_genderT);
         datePicker=findViewById(R.id.datePicker);
         radioGroup=findViewById(R.id.radioGroup);
+        Picasso.get().load(Data.dataAVT).into(img_edt_avt);
+        Picasso.get().load(Data.dataBGR).into(img_media);
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -280,6 +283,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private void GoiIntent() {
         databaseReference.child("users").child(Data.dataPhone).child("imgUS").setValue(imageUrl);
         databaseReference.child("users").child(Data.dataPhone).child("anhnen").setValue(imageUrl1);
+        Data.dataAVT=imageUrl;
+        Data.dataBGR=imageUrl1;
     }
 
 }

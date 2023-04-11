@@ -94,6 +94,5 @@ public class HomeActivity extends AppCompatActivity {
 
         viewPageAdapter = new ViewPageAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(viewPageAdapter);
-
     }
 }
