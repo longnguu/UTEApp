@@ -63,37 +63,40 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         VideoView videoView;
-        TextView title;
+        TextView title,des;
         ProgressBar progressBar;
         SurfaceView surfaceView;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             videoView = itemView.findViewById(R.id.reesl_row_videoView);
             title = itemView.findViewById(R.id.reesl_row_textVideoTitle);
+            des=itemView.findViewById(R.id.reesl_row_textVideoDescription);
             progressBar = itemView.findViewById(R.id.reesl_row_videoProgressBar);
             surfaceView = itemView.findViewById(R.id.surface_view);
         }
         void setData(VideosModel data){
-//            videoView.setVideoURI(Uri.parse(data.getUrl()));
-            videoView.setVisibility(View.GONE);
-            SimpleExoPlayer player = new SimpleExoPlayer.Builder(context).build();
-            Uri uri = Uri.parse(data.getUrl());
-            MediaSource mediaSource = new ProgressiveMediaSource.Factory(new DefaultDataSourceFactory(context)).createMediaSource(uri);
-
-            player.setVideoSurfaceView(surfaceView);
-            player.setMediaSource(mediaSource);
-            player.prepare();
-            player.setPlayWhenReady(true);
-            player.addListener(new Player.EventListener() {
-                @Override
-                public void onLoadingChanged(boolean isLoading) {
-                    if (isLoading) {
-                        progressBar.setVisibility(View.VISIBLE);
-                    } else {
-                        progressBar.setVisibility(View.GONE);
-                    }
-                }
-            });
+            videoView.setVideoURI(Uri.parse(data.getUrl()));
+            title.setText(data.getTitle());
+            des.setText(data.getDes());
+//            videoView.setVisibility(View.GONE);
+//            SimpleExoPlayer player = new SimpleExoPlayer.Builder(context).build();
+//            Uri uri = Uri.parse(data.getUrl());
+//            MediaSource mediaSource = new ProgressiveMediaSource.Factory(new DefaultDataSourceFactory(context)).createMediaSource(uri);
+//
+//            player.setVideoSurfaceView(surfaceView);
+//            player.setMediaSource(mediaSource);
+//            player.prepare();
+//            player.setPlayWhenReady(true);
+//            player.addListener(new Player.EventListener() {
+//                @Override
+//                public void onLoadingChanged(boolean isLoading) {
+//                    if (isLoading) {
+//                        progressBar.setVisibility(View.VISIBLE);
+//                    } else {
+//                        progressBar.setVisibility(View.GONE);
+//                    }
+//                }
+//            });
 //            Glide.with(context)
 //                    .load(data.getUrl())
 //                    .downloadOnly(new SimpleTarget<File>() {

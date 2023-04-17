@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -225,7 +226,6 @@ public class HomeFragment extends Fragment {
         choose2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 dialog.dismiss();
                 Toast.makeText(getActivity(),"Share is Clicked",Toast.LENGTH_SHORT).show();
 
@@ -245,7 +245,6 @@ public class HomeFragment extends Fragment {
         choose4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 dialog.dismiss();
                 startActivity(new Intent(getActivity(), AddProductActivity.class));
 
@@ -300,6 +299,8 @@ public class HomeFragment extends Fragment {
 
             TextView btn_add = dialogAddPicVideo1.findViewById(R.id.addpicvideos_2_add);
             TextView btnSave=dialogAddPicVideo1.findViewById(R.id.addpicvideo_btn_save);
+            EditText edtdes= dialogAddPicVideo1.findViewById(R.id.addpicvideo_edt_des);
+            EditText edttit= dialogAddPicVideo1.findViewById(R.id.addpicvideo_edt_title);
             TextView btnCancel = dialogAddPicVideo1.findViewById(R.id.addpicvideo_btn_cancel);
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -334,9 +335,15 @@ public class HomeFragment extends Fragment {
                                         }else{
                                             databaseReference.child("Videos_Account").child(Data.dataPhone).child(time).child("url").setValue(downloadUrl);
                                             databaseReference.child("Videos").push().child("url").setValue(downloadUrl);
+                                            databaseReference.child("Videos_Account").child(Data.dataPhone).child(time).child("title").setValue(edttit.getText().toString());
+                                            databaseReference.child("Videos").push().child("title").setValue(edttit.getText().toString());
+                                            databaseReference.child("Videos_Account").child(Data.dataPhone).child(time).child("des").setValue(edtdes.getText().toString());
+                                            databaseReference.child("Videos").push().child("des").setValue(edtdes.getText().toString());
                                             databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("l").setValue("video");
                                             databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("link").setValue(downloadUrl);
                                         }
+                                        databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("title").setValue(edttit.getText().toString());
+                                        databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("des").setValue(edtdes.getText().toString());
                                         kt++;
                                         linkList.add(downloadUrl);
                                         System.out.println(downloadUrl);

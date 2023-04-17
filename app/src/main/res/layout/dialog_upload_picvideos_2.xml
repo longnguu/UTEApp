@@ -25,6 +25,7 @@
                 android:textColor="#000" />
 
             <EditText
+                android:id="@+id/addpicvideo_edt_des"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:background="@drawable/border_bo"
@@ -33,6 +34,7 @@
                 android:padding="10dp"
                 android:layout_margin="10dp"/>
             <EditText
+                android:id="@+id/addpicvideo_edt_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_bo"

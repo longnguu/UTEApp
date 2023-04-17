@@ -15,19 +15,17 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_height="match_parent">
-            <androidx.cardview.widget.CardView
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                app:cardCornerRadius="10dp">
+                android:layout_height="200dp">
                 <ImageView
-                    android:background="@drawable/draw_boder_radius"
-                    android:src="@drawable/background_def"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
                     android:id="@+id/backgroundHome"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                </ImageView>
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/draw_boder_radius"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/background_def"></ImageView>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -71,7 +69,7 @@
                         </TextView>
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </RelativeLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"

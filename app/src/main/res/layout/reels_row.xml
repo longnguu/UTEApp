@@ -13,8 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintVertical_bias="1.0"/>
-    <VideoView
-        android:id="@+id/reesl_row_videoView"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -22,8 +21,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="1.0"
-        />
+        app:layout_constraintVertical_bias="1.0">
+        <VideoView
+            android:id="@+id/reesl_row_videoView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            />
+        <androidx.viewpager2.widget.ViewPager2
+            android:layout_width="match_parent"
+            android:id="@+id/reels_row_ViewPage"
+            android:layout_height="match_parent"/>
+
+    </RelativeLayout>
     <ProgressBar
         android:id="@+id/reesl_row_videoProgressBar"
         app:layout_constraintBottom_toBottomOf="parent"

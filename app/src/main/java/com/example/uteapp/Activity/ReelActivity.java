@@ -39,7 +39,7 @@ public class ReelActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    videosModels.add(new VideosModel(dataSnapshot.child("url").getValue(String.class),"",""));
+                    videosModels.add(new VideosModel(dataSnapshot.child("url").getValue(String.class),dataSnapshot.child("title").getValue(String.class),dataSnapshot.child("des").getValue(String.class)));
                     reelsAdapter.updateAdapter(videosModels);
                 }
             }
