@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <SurfaceView
+        android:visibility="gone"
         android:id="@+id/surface_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,6 +17,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,11 +29,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:visibility="gone"
             />
-        <androidx.viewpager2.widget.ViewPager2
+        <LinearLayout
+            android:id="@+id/linnerfrh"
+            android:background="@color/black"
             android:layout_width="match_parent"
-            android:id="@+id/reels_row_ViewPage"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.viewpager.widget.ViewPager
+
+
+                android:id="@+id/reels_row_ViewPage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black"></androidx.viewpager.widget.ViewPager>
+
+            <me.relex.circleindicator.CircleIndicator
+                android:id="@+id/circleindicator"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="-30dp"
+                app:ci_drawable="@drawable/bg_indicator"></me.relex.circleindicator.CircleIndicator>
+        </LinearLayout>
 
     </RelativeLayout>
     <ProgressBar
@@ -67,7 +89,7 @@
                 android:paddingTop="5dp"
                 android:paddingEnd="5dp"
                 android:text="@string/app_name"
-                android:textColor="@color/white"
+                android:textColor="#FFFFFF"
                 android:textSize="25sp"
                 android:textStyle="bold"
                 android:shadowDx="0"

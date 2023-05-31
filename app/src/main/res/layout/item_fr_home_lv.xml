@@ -124,6 +124,7 @@
             </LinearLayout>
         </LinearLayout>
         <TextView
+            android:id="@+id/title_tab1fr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Demo">

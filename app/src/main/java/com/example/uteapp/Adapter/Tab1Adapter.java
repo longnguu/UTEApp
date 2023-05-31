@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,7 @@ public class Tab1Adapter extends RecyclerView.Adapter<Tab1Adapter.Tab1AdapterVie
     public void onBindViewHolder(@NonNull Tab1Adapter.Tab1AdapterViewHolder holder, int position) {
        PicVideos data= mData.get(position);
        System.out.println(data.getSize());
+       holder.tabTitle.setText(data.getTitle().get(0));
         holder.a1.setVisibility(View.GONE);
         holder.a3.setVisibility(View.GONE);
         holder.a2.setVisibility(View.GONE);
@@ -122,6 +124,7 @@ public class Tab1Adapter extends RecyclerView.Adapter<Tab1Adapter.Tab1AdapterVie
             @Override
             public void onClick(View view) {
                 Intent intent =new Intent(context, ReelActivity.class);
+                intent.putExtra("data",data.getLink().get(0));
                 context.startActivity(intent);
             }
         });
@@ -137,8 +140,10 @@ public class Tab1Adapter extends RecyclerView.Adapter<Tab1Adapter.Tab1AdapterVie
         ImageView a1,a2,a3,a4;
         VideoView v1,v2,v3,v4;
         LinearLayout linearLayout,toreels;
+        TextView tabTitle;
         public Tab1AdapterViewHolder(@NonNull View itemView) {
             super(itemView);
+            tabTitle = itemView.findViewById(R.id.title_tab1fr);
             c1=itemView.findViewById(R.id.view1);
             c2=itemView.findViewById(R.id.view2);
             c3=itemView.findViewById(R.id.view3);

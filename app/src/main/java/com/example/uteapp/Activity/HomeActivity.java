@@ -2,23 +2,42 @@ package com.example.uteapp.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.uteapp.Adapter.ViewPageAdapter;
+import com.example.uteapp.Model.CartList;
+import com.example.uteapp.Model.Data;
 import com.example.uteapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
     ViewPager viewPager;
     ViewPageAdapter viewPageAdapter;
+    ImageView topnavCart;
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+    List<CartList> cartLists = new ArrayList<>();
+    CardView slgCart;
+    TextView textSlgCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +49,15 @@ public class HomeActivity extends AppCompatActivity {
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.navnav);
         viewPager = (ViewPager) findViewById(R.id.viewpg);
+        topnavCart = findViewById(R.id.topnavCart);
+        slgCart = findViewById(R.id.slCartMain);
+        textSlgCart = findViewById(R.id.textSLCart);
+        topnavCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(HomeActivity.this,CartActivity.class));
+            }
+        });
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -88,6 +116,37 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        databaseReference.child("GioHang").child(Data.dataPhone).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                cartLists.clear();
+                int i=0;
+                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    String tenSP=dataSnapshot.child("tenSP").getValue(String.class);
+                    String gia=dataSnapshot.child("gia").getValue(String.class);
+                    String check=dataSnapshot.child("check").getValue(String.class);
+                    String name=dataSnapshot.child("name").getValue(String.class);
+                    String maSP=dataSnapshot.child("maSP").getValue(String.class);
+                    String uid=dataSnapshot.child("uid").getValue(String.class);
+                    String soLuongMua=dataSnapshot.child("soLuongMua").getValue(String.class);
+                    String hinhanh=dataSnapshot.child("soLuongMua").getValue(String.class);
+                    CartList cartList = new CartList(maSP,tenSP,soLuongMua,check,gia,uid,hinhanh);
+                    cartLists.add(cartList);
+                    i++;
+                }
+                if (i > 0) {
+                    slgCart.setVisibility(View.VISIBLE);
+                    textSlgCart.setText(String.valueOf(i));
+                } else {
+                    slgCart.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
