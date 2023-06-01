@@ -138,6 +138,7 @@ public class SignInActivity extends AppCompatActivity {
                                         // If sign in fails, display a message to the user.
                                         Toast.makeText(SignInActivity.this, "Failed to login! Please check your credentials!",
                                                 Toast.LENGTH_LONG).show();
+                                        progressDialog.dismiss();
                                     }
                                 }
                             });

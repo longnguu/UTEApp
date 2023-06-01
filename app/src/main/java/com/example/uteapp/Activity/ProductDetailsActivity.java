@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.uteapp.Adapter.SanPhamAdapter;
 import com.example.uteapp.Model.CartList;
+import com.example.uteapp.Model.Data;
 import com.example.uteapp.Model.SanPham;
 import com.example.uteapp.R;
 import com.google.firebase.database.DataSnapshot;
@@ -139,6 +140,49 @@ public class ProductDetailsActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+        btnchat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                databaseReference.child("chat").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        kt=true;
+                        chatKey= String.valueOf(snapshot.getChildrenCount()+1);
+                        for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                            if((dataSnapshot.child("user_1").getValue(String.class).equals(Data.dataPhone)  &&  dataSnapshot.child("user_2").getValue(String.class).equals(uid))
+                                    || (dataSnapshot.child("user_1").getValue(String.class).equals(uid)     &&  dataSnapshot.child("user_2").getValue(String.class).equals(Data.dataPhone))){
+                                chatKey=dataSnapshot.getKey();
+                                kt=false;
+                            }
+                        }
+                        System.out.println(chatKey);
+                        if (!kt){
+                            Intent intent = new Intent(ProductDetailsActivity.this,ChatActivity.class);
+                            intent.putExtra("name",nameShop);
+                            intent.putExtra("profilePic",imgUS);
+                            intent.putExtra("chatKey",chatKey);
+                            intent.putExtra("mobile",uid);
+                            startActivity(intent);
+                        }else{
+                            databaseReference.child("chat").child(chatKey).child("user_1").setValue(mobile);
+                            databaseReference.child("chat").child(chatKey).child("user_2").setValue(uid);
+                            Intent intent = new Intent(ProductDetailsActivity.this,ChatActivity.class);
+                            intent.putExtra("name",nameShop);
+                            intent.putExtra("profilePic",imgUS);
+                            intent.putExtra("chatKey",chatKey);
+                            intent.putExtra("mobile",uid);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 

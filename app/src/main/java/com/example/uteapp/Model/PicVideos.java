@@ -7,7 +7,23 @@ public class PicVideos {
     List<String> loai = new ArrayList<>();
     List<String> link = new ArrayList<>();
     List<String> des= new ArrayList<>(),title = new ArrayList<>();
-    String avt;
+    String avt,Key,ParentKey;
+
+    public String getKey() {
+        return Key;
+    }
+
+    public void setKey(String key) {
+        Key = key;
+    }
+
+    public String getParentKey() {
+        return ParentKey;
+    }
+
+    public void setParentKey(String parentKey) {
+        ParentKey = parentKey;
+    }
 
     public String getAvt() {
         return avt;
@@ -22,7 +38,7 @@ public class PicVideos {
         this.link = link;
         this.des = des;
         this.title = title;
-        avt=Data.dataAVT;
+        avt="";
     }
 
     public List<String> getDes() {

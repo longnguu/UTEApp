@@ -346,6 +346,7 @@ public class HomeFragment extends Fragment {
                                             }
                                             databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("title").setValue(edttit.getText().toString());
                                             databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("des").setValue(edtdes.getText().toString());
+//                                            databaseReference.child("LikeCommentMedia").child(Data.dataPhone).child(time).child("like")
                                             kt++;
                                             linkList.add(downloadUrl);
                                             System.out.println(downloadUrl);

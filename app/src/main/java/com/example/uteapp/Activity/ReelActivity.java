@@ -44,40 +44,30 @@ public class ReelActivity extends AppCompatActivity {
 
         viewPager2 = findViewById(R.id.vpager);
         reelsAdapter = new ReelsAdapter(picVideos,ReelActivity.this);
-//        databaseReference.child("Media").child(Data.dataPhone).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-//                    videosModels.add(new VideosModel(dataSnapshot.child("url").getValue(String.class),dataSnapshot.child("title").getValue(String.class),dataSnapshot.child("des").getValue(String.class)));
-//                    reelsAdapter.updateAdapter(videosModels);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
+        String dataIn = getIntent().getStringExtra("data");
         databaseReference.child("Media").child(Data.dataPhone).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int i=0;
                 picVideos.clear();
                 for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    i++;
                     PicVideos picVideoss = new PicVideos();
+                    picVideoss.setAvt(Data.dataAVT);
+                    picVideoss.setParentKey(snapshot.getKey());
+                    picVideoss.setKey(dataSnapshot.getKey());
                     for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                         picVideoss.setLink(dataSnapshot1.child("link").getValue(String.class));
                         picVideoss.setLoai(dataSnapshot1.child("l").getValue(String.class));
                         picVideoss.setDes(dataSnapshot1.child("des").getValue(String.class));
                         picVideoss.setTitle(dataSnapshot1.child("title").getValue(String.class));
                     }
-                    picVideos.add(picVideoss);
+                    if (picVideoss.getLink().get(0).equals(dataIn)){
+                        picVideos.add(0,picVideoss);
+                    }else
+                        picVideos.add(picVideoss);
                 }
                 reelsAdapter.updateAdapter(picVideos);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

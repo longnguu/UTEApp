@@ -150,6 +150,37 @@
                 android:layout_marginEnd="18dp"
                 android:layout_width="40dp"
                 android:layout_height="40dp"/>
+            <TextView
+                android:id="@+id/reesl_row_favorites_txt"
+                android:src="@drawable/icon_favourite"
+                android:padding="2dp"
+                android:text="0"
+                android:textColor="#FFFFFF"
+                android:textAlignment="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="18dp"
+                android:layout_width="40dp"
+                android:layout_height="20dp"/>
+            <ImageView
+                android:id="@+id/reesl_row_cmt"
+                android:src="@drawable/icon_cmt"
+                android:layout_gravity="end"
+                android:padding="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="18dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+            <TextView
+                android:id="@+id/reesl_row_cmt_txt"
+                android:src="@drawable/icon_favourite"
+                android:padding="2dp"
+                android:text="0"
+                android:textColor="#FFFFFF"
+                android:textAlignment="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="18dp"
+                android:layout_width="40dp"
+                android:layout_height="20dp"/>
             <ImageView
                 android:src="@drawable/icon_share"
                 android:layout_gravity="end"

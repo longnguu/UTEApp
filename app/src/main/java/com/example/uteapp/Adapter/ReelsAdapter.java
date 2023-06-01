@@ -1,12 +1,18 @@
 package com.example.uteapp.Adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,6 +27,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.uteapp.Model.Data;
 import com.example.uteapp.Model.PicVideos;
 import com.example.uteapp.Model.VideosModel;
 import com.example.uteapp.R;
@@ -29,6 +36,11 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -68,6 +80,112 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
         holder.photoAdapter= new PhotoAdapter(context,data.getLoai(),data.getLink());
         holder.viewPager.setAdapter(holder.photoAdapter);
         holder.circleIndicator.setViewPager(holder.viewPager);
+
+        holder.databaseReference.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("like").child(Data.dataPhone).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue()!=null) {
+                    System.out.println(dataSnapshot.getRef());
+                    holder.like.setImageResource(R.drawable.icon_favourite_red);
+                } else {
+                    holder.like.setImageResource(R.drawable.icon_favourite);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Xử lý lỗi nếu có
+            }
+        });
+        holder.databaseReference.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("like").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Long likeValue = Long.valueOf(String.valueOf(snapshot.getChildrenCount()));
+                // Do something with the retrieved value
+                if (likeValue!=null){
+                    holder.tlike.setText(likeValue.toString());
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+        holder.like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Drawable currentDrawable = holder.like.getDrawable();
+                Drawable targetDrawable = holder.itemView.getContext().getResources().getDrawable(R.drawable.icon_favourite);
+                if (currentDrawable.getConstantState().equals(targetDrawable.getConstantState())) {
+                    holder.databaseReference.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("like").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            System.out.println(snapshot.getRef());
+                            holder.databaseReference1.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("like").child(Data.dataPhone).setValue("1");
+                            Long likeValue = Long.valueOf(String.valueOf(snapshot.getChildrenCount()));
+                            if (likeValue!=null){
+                                holder.tlike.setText(likeValue.toString());
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    holder.like.setImageResource(R.drawable.icon_favourite_red);
+                } else {
+                    holder.databaseReference.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("like").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            holder.databaseReference1.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("like").child(Data.dataPhone).removeValue();
+                            Long likeValue = Long.valueOf(String.valueOf(snapshot.getChildrenCount()));
+                            if (likeValue!=null){
+                                holder.tlike.setText(likeValue.toString());
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    holder.like.setImageResource(R.drawable.icon_favourite);
+                }
+            }
+        });
+        holder.databaseReference.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("comment").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                System.out.println(snapshot.getRef());
+                Long likeValue = Long.valueOf(String.valueOf(snapshot.getChildrenCount()));
+                // Do something with the retrieved value
+                if (likeValue!=null){
+                    holder.tcmt.setText(likeValue.toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        holder.cmt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog dialogAddPicVideo = new Dialog(context);
+                dialogAddPicVideo.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialogAddPicVideo.setContentView(R.layout.dialog_upload_picvideos_1);
+                dialogAddPicVideo.show();
+                dialogAddPicVideo.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                dialogAddPicVideo.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialogAddPicVideo.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                dialogAddPicVideo.getWindow().setGravity(Gravity.BOTTOM);
+            }
+        });
+
     }
 
     @Override
@@ -81,13 +199,15 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         VideoView videoView;
-        TextView title,des;
+        TextView title,des,tlike,tcmt;
         ProgressBar progressBar;
         SurfaceView surfaceView;
         ViewPager viewPager;
         PhotoAdapter photoAdapter;
         CircleIndicator circleIndicator;
-        ImageView avt;
+        ImageView avt,like,cmt;
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference();
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             videoView = itemView.findViewById(R.id.reesl_row_videoView);
@@ -98,6 +218,11 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
             viewPager=itemView.findViewById(R.id.reels_row_ViewPage);
             circleIndicator = itemView.findViewById(R.id.circleindicator);
             avt=itemView.findViewById(R.id.avtReel);
+            like=itemView.findViewById(R.id.reesl_row_favorites);
+            tlike=itemView.findViewById(R.id.reesl_row_favorites_txt);
+            cmt=itemView.findViewById(R.id.reesl_row_cmt);
+            tcmt=itemView.findViewById(R.id.reesl_row_cmt_txt);
+
 
         }
         void setData(PicVideos data){

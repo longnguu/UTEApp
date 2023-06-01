@@ -30,6 +30,20 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".Activity.ChatActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".Activity.MessengerActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".Activity.ReelActivity"
             android:exported="false">
             <meta-data
