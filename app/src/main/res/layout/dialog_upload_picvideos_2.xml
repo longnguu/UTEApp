@@ -23,22 +23,48 @@
                 android:drawableLeft="@drawable/icon_close"
                 android:drawableRight="@drawable/icon_back"
                 android:textColor="#000" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:background="@drawable/border_bo"
-                android:hint="say something"
-                android:gravity="top"
-                android:padding="10dp"
-                android:layout_margin="10dp"/>
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_phone"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_bo"
-                android:gravity="top"
-                android:padding="10dp"
-                android:layout_margin="10dp"/>
+                android:hint="Say something"
+                android:paddingBottom="5dp"
+                android:transitionName="username_Tran"
+                android:required="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/addpicvideo_edt_des"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@drawable/border_bo"
+                    android:gravity="top"
+                    android:padding="10dp"
+                    android:layout_margin="10dp"
+                    android:inputType="text"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Title"
+                android:paddingBottom="5dp"
+                android:transitionName="username_Tran"
+                android:required="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/addpicvideo_edt_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_bo"
+                    android:gravity="top"
+                    android:padding="10dp"
+                    android:layout_margin="10dp"
+                    android:inputType="text"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
