@@ -7,12 +7,22 @@ public class PicVideos {
     List<String> loai = new ArrayList<>();
     List<String> link = new ArrayList<>();
     List<String> des= new ArrayList<>(),title = new ArrayList<>();
+    String avt;
+
+    public String getAvt() {
+        return avt;
+    }
+
+    public void setAvt(String avt) {
+        this.avt = avt;
+    }
 
     public PicVideos(List<String> loai, List<String> link, List<String> des, List<String> title) {
         this.loai = loai;
         this.link = link;
         this.des = des;
         this.title = title;
+        avt=Data.dataAVT;
     }
 
     public List<String> getDes() {

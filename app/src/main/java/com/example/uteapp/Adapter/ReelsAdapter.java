@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -60,6 +61,8 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
         PicVideos data= videosModels.get(position);
         holder.des.setText(data.getDes().get(0));
         holder.title.setText(data.getTitle().get(0));
+        Picasso.get().load(data.getAvt()).into(holder.avt);
+        System.out.println("kkk"+data.getAvt());
         if (data.getTitle().get(0)!="")
             System.out.println(data.getTitle());
         holder.photoAdapter= new PhotoAdapter(context,data.getLoai(),data.getLink());
@@ -84,6 +87,7 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
         ViewPager viewPager;
         PhotoAdapter photoAdapter;
         CircleIndicator circleIndicator;
+        ImageView avt;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             videoView = itemView.findViewById(R.id.reesl_row_videoView);
@@ -93,6 +97,8 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
             surfaceView = itemView.findViewById(R.id.surface_view);
             viewPager=itemView.findViewById(R.id.reels_row_ViewPage);
             circleIndicator = itemView.findViewById(R.id.circleindicator);
+            avt=itemView.findViewById(R.id.avtReel);
+
         }
         void setData(PicVideos data){
 

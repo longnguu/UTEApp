@@ -118,13 +118,29 @@
             android:gravity="end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <ImageView
-                android:src="@drawable/icon_person"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/vienavt"
                 android:layout_gravity="end"
                 android:padding="2dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="18dp"
                 android:layout_width="40dp"
-                android:layout_height="40dp"/>
+                android:layout_height="40dp"
+                app:cardBackgroundColor="@color/pri100"
+                app:cardCornerRadius="50dp">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="50dp">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/icon_person"
+                        android:id="@+id/avtReel">
+                    </ImageView>
+                </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
             <ImageView
                 android:id="@+id/reesl_row_favorites"
                 android:src="@drawable/icon_favourite"

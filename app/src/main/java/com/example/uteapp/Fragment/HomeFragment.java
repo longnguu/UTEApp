@@ -143,6 +143,7 @@ public class HomeFragment extends Fragment {
                 String avtt = (String) snapshot.child("imgUS").getValue();
                 String bgrr = String.valueOf(snapshot.child("anhnen").getValue());
                 String namee = String.valueOf(snapshot.child("tenUser").getValue());
+                Data.dataAVT=avtt;
                 Picasso.get().load(avtt).into(avt);
                 Picasso.get().load(bgrr).into(bgr);
                 name.setText(namee);
