@@ -103,8 +103,6 @@ public class Tab1Fragment extends Fragment {
                     for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                         picVideos.setLink(dataSnapshot1.child("link").getValue(String.class));
                         picVideos.setLoai(dataSnapshot1.child("l").getValue(String.class));
-                        picVideos.setTitle(dataSnapshot1.child("title").getValue(String.class));
-                        picVideos.setDes(dataSnapshot1.child("des").getValue(String.class));
                     }
                     data.add(picVideos);
                 }
@@ -134,10 +132,5 @@ public class Tab1Fragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 }
