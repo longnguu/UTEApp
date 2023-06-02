@@ -274,11 +274,39 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+//    private static Bitmap rotateImage(Bitmap source, float angle) {
+//        Matrix matrix = new Matrix();
+//        matrix.postRotate(angle);
+//        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+//    }
+//    private static Bitmap rotateImage(Bitmap source, float angle) {
+//        Matrix matrix = new Matrix();
+//        matrix.postRotate(angle);
+//        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, false);
+//    }
+
     private static Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+
+        int width = source.getWidth();
+        int height = source.getHeight();
+        Bitmap rotatedBitmap = Bitmap.createBitmap(source, 0, 0, width, height, matrix, false);
+
+        // Chỉnh lại kích thước của bitmap nếu nó không đủ rộng hoặc cao
+        if (width > height && rotatedBitmap.getHeight() < width) {
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(rotatedBitmap, width, height, true);
+            rotatedBitmap.recycle();
+            rotatedBitmap = scaledBitmap;
+        } else if (height > width && rotatedBitmap.getWidth() < height) {
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(rotatedBitmap, width, height, true);
+            rotatedBitmap.recycle();
+            rotatedBitmap = scaledBitmap;
+        }
+
+        return rotatedBitmap;
     }
+
 
     private void GoiIntent() {
         databaseReference.child("users").child(Data.dataPhone).child("imgUS").setValue(imageUrl);

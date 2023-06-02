@@ -70,7 +70,7 @@ public class MessengerActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Loading...");
-        progressDialog.show();
+//        progressDialog.show();
 
 
 

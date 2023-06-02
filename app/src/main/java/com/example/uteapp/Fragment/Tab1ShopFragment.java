@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.uteapp.Adapter.Tab1Adapter;
+import com.example.uteapp.Adapter.Tab1AdapterShop;
 import com.example.uteapp.Model.Data;
 import com.example.uteapp.Model.PicVideos;
 import com.example.uteapp.R;
@@ -28,14 +28,13 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Tab1Fragment#newInstance} factory method to
+ * Use the {@link Tab1ShopFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Tab1Fragment extends Fragment {
+public class Tab1ShopFragment extends Fragment {
     DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
-    Tab1Adapter adapter;
+    Tab1AdapterShop adapter;
     List<PicVideos> data = new ArrayList<PicVideos>();
-
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,13 +45,8 @@ public class Tab1Fragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public Tab1Fragment() {
+    public Tab1ShopFragment() {
         // Required empty public constructor
-    }
-    public Tab1Fragment(List<PicVideos> data) {
-        // Required empty public constructor
-        this.data=data;
-        adapter=new Tab1Adapter(data,getContext());
     }
 
     /**
@@ -61,11 +55,11 @@ public class Tab1Fragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Tab1Fragment.
+     * @return A new instance of fragment Tab1ShopFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static Tab1Fragment newInstance(String param1, String param2) {
-        Tab1Fragment fragment = new Tab1Fragment();
+    public static Tab1ShopFragment newInstance(String param1, String param2) {
+        Tab1ShopFragment fragment = new Tab1ShopFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -86,13 +80,14 @@ public class Tab1Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tab1, container, false);
+        return inflater.inflate(R.layout.fragment_tab1_shop, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        databaseReference.child("Media").child(Data.dataPhone).addValueEventListener(new ValueEventListener() {
+        String UID=getActivity().getIntent().getStringExtra("uid");
+        databaseReference.child("Media").child(UID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int i=0;
@@ -119,7 +114,7 @@ public class Tab1Fragment extends Fragment {
 
 
         System.out.println(data.size());
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_tab1);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_tab1Shop);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false);
 //        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
 //            @Override
@@ -129,15 +124,9 @@ public class Tab1Fragment extends Fragment {
 //        });
 
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new Tab1Adapter(data,getContext());
+        adapter = new Tab1AdapterShop(data,getContext());
         adapter.update(data);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 }

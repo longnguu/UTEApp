@@ -1,5 +1,6 @@
 package com.example.uteapp.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +43,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         holder.name.setText(commentList.getName());
         holder.cmt.setText(commentList.getCmt());
         holder.time.setText(commentList.getDate()+" - "+ commentList.getTime());
-        if (commentList.getKeyy().equals(Data.dataPhone)){
+        Activity activity= (Activity) context;
+        if (commentList.getKeyy().equals(commentList.getDataKey())){
             holder.cardView.setVisibility(View.VISIBLE);
         }else
             holder.cardView.setVisibility(View.GONE);

@@ -3,13 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.SearchFragment">
+    tools:context=".Fragment.Tab1ShopFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_tab1Shop"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/search_recyclerView"/>
+        android:layout_height="match_parent">
 
+    </androidx.recyclerview.widget.RecyclerView>
 
 </FrameLayout>

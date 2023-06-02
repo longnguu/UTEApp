@@ -1,8 +1,13 @@
 package com.example.uteapp.Adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
@@ -19,6 +24,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -35,6 +42,12 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import org.checkerframework.checker.units.qual.C;
 
@@ -44,12 +57,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.relex.circleindicator.CircleIndicator;
+
 public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder> {
 
-    ArrayList<VideosModel> videosModels;
+    ArrayList<PicVideos> videosModels;
     Context context;
 
-    public ReelsAdapter(ArrayList<VideosModel> videosModels, Context context) {
+    public ReelsAdapter(ArrayList<PicVideos> videosModels, Context context) {
         this.videosModels = videosModels;
         this.context = context;
     }
@@ -63,6 +78,7 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
         holder.progressBar.setVisibility(View.GONE);
         PicVideos data= videosModels.get(position);
         holder.des.setText(data.getDes().get(0));
@@ -251,7 +267,7 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
     public int getItemCount() {
         return videosModels.size();
     }
-    public void updateAdapter(ArrayList<VideosModel> videosModel){
+    public void updateAdapter(ArrayList<PicVideos> videosModel){
         this.videosModels = videosModel;
         notifyDataSetChanged();
     }
@@ -264,12 +280,28 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
         TextView title,des,tlike,tcmt;
         ProgressBar progressBar;
         SurfaceView surfaceView;
+        ViewPager viewPager;
+        PhotoAdapter photoAdapter;
+        CircleIndicator circleIndicator;
+        ImageView avt,like,cmt;
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference();
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             videoView = itemView.findViewById(R.id.reesl_row_videoView);
             title = itemView.findViewById(R.id.reesl_row_textVideoTitle);
+            des=itemView.findViewById(R.id.reesl_row_textVideoDescription);
             progressBar = itemView.findViewById(R.id.reesl_row_videoProgressBar);
             surfaceView = itemView.findViewById(R.id.surface_view);
+            viewPager=itemView.findViewById(R.id.reels_row_ViewPage);
+            circleIndicator = itemView.findViewById(R.id.circleindicator);
+            avt=itemView.findViewById(R.id.avtReel);
+            like=itemView.findViewById(R.id.reesl_row_favorites);
+            tlike=itemView.findViewById(R.id.reesl_row_favorites_txt);
+            cmt=itemView.findViewById(R.id.reesl_row_cmt);
+            tcmt=itemView.findViewById(R.id.reesl_row_cmt_txt);
+
+
         }
     }
     void Update(MyViewHolder holder,PicVideos data){
@@ -301,6 +333,7 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
 //                                holder.commentLists.add(commentListsss.get(0));
 //                                System.out.println(commentListsss.get(0).getCmt()+"  cmt0");
 //                            }
+                            commentList.setDataKey(data.getParentKey());
                             commentListsss.add(commentList);
                             System.out.println(commentListsss.size()+"  "+holder.commentLists.size()+"  "+cmtValue);
                             holder.commentLists.add(commentList);

@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragment.HomeFragment">
-
-    <!-- TODO: Update blank fragment layout -->
+    tools:context=".Activity.ShopDetailsActivity">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -156,8 +154,9 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:id="@+id/follow"
                         android:gravity="center"
-                        android:text="Following"
+                        android:text="Follow"
                         android:textSize="20dp"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold"/>
@@ -169,33 +168,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/frhome_tab_layout"
+                    android:id="@+id/shop_frhome_tab_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:tabMode="fixed"
                     app:tabGravity="fill"/>
                 <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/frhome_view_pager"
+                    android:id="@+id/shop_frhome_view_pager"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
             </LinearLayout>
         </LinearLayout>
-        <androidx.cardview.widget.CardView
-            android:id="@+id/fthome_btn_choose"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:cardCornerRadius="50dp"
-            android:layout_margin="20dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            app:cardBackgroundColor="@color/red">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:src="@drawable/icon_add">
-            </ImageView>
-        </androidx.cardview.widget.CardView>
+
 
     </RelativeLayout>
-</FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

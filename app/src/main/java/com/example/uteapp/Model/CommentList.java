@@ -2,6 +2,15 @@ package com.example.uteapp.Model;
 
 public class CommentList {
     String keyy,name,cmt,date,time,avt;
+    String dataKey=null;
+
+    public String getDataKey() {
+        return dataKey;
+    }
+
+    public void setDataKey(String dataKey) {
+        this.dataKey = dataKey;
+    }
 
     public CommentList(String keyy, String name, String cmt, String date, String time, String avt) {
         this.keyy = keyy;

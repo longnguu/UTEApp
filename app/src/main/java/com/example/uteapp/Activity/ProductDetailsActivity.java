@@ -40,7 +40,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
     Button btnchinhsua,bthaddcart,btnchat;
     LinearLayout linearLayout;
     ImageView imageView,imgShop;
-    TextView textViewName,textViewMota,textViewGia,tenShop;
+    TextView textViewName,textViewMota,textViewGia,tenShop,viewShop;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
     ProgressDialog progressDialog;
     List<SanPham> sanPhams=new ArrayList<>();
@@ -142,6 +142,14 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
             }
         });
+        viewShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProductDetailsActivity.this,ShopDetailsActivity.class);
+                intent.putExtra("uid",uid);
+                startActivity(intent);
+            }
+        });
 
         btnchat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,6 +216,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
 
     }
     private void AnhXa() {
+        viewShop=findViewById(R.id.viewShop);
         linearLayout = findViewById(R.id.linerBottomDetails);
         btnchinhsua = findViewById(R.id.btnChinhSuaDetails);
         btnchat=findViewById(R.id.btn_chatDetails);

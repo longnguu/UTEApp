@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,9 +31,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.uteapp.Activity.AddProductActivity;
 import com.example.uteapp.Adapter.AddPicVideoAdapter;
+
 import com.example.uteapp.Adapter.TabLayoutAdapter;
 import com.example.uteapp.Model.Data;
 import com.example.uteapp.Model.PicVideos;
@@ -63,10 +66,11 @@ public class HomeFragment extends Fragment {
     TabLayoutAdapter tabLayoutAdapter;
     TabLayout tabLayout;
     CardView btn_choose;
-    ViewPager viewPager;
+    ViewPager2 viewPager;
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     StorageReference storageReference= firebaseStorage.getReference();
     ProgressDialog progressDialog;
+    TextView cP,cFer,cFing;
     List<PicVideos> data = new ArrayList<PicVideos>();
     int kt=0;
 
@@ -140,9 +144,43 @@ public class HomeFragment extends Fragment {
                 String avtt = (String) snapshot.child("imgUS").getValue();
                 String bgrr = String.valueOf(snapshot.child("anhnen").getValue());
                 String namee = String.valueOf(snapshot.child("tenUser").getValue());
+                Data.dataAVT=avtt;
                 Picasso.get().load(avtt).into(avt);
                 Picasso.get().load(bgrr).into(bgr);
                 name.setText(namee);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        databaseReference.child("Media").child(Data.dataPhone).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                cP.setText(String.valueOf(snapshot.getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        databaseReference.child("users").child(Data.dataPhone).child("follower").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                cFer.setText(String.valueOf(snapshot.getChildrenCount()));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        databaseReference.child("users").child(Data.dataPhone).child("following").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                cFing.setText(String.valueOf(snapshot.getChildrenCount()));
             }
 
             @Override
@@ -159,18 +197,17 @@ public class HomeFragment extends Fragment {
                 showDialog();
             }
         });
-        tabLayoutAdapter = new TabLayoutAdapter(getActivity().getSupportFragmentManager());
-        if (tabLayoutAdapter.getCount()==0){
-            tabLayoutAdapter.addFragment(new Tab1Fragment(),"");
-            tabLayoutAdapter.addFragment(new Tab2Fragment(), "");
-        }
-
-
-
+        String[] tabTitles = {"", ""};
+        Fragment[] fragments = {new Tab1Fragment(), new Tab2Fragment()};
         tabLayout = view.findViewById(R.id.frhome_tab_layout);
         viewPager = view.findViewById(R.id.frhome_view_pager);
-        viewPager.setAdapter(tabLayoutAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+
+        TabLayoutAdapter adapter = new TabLayoutAdapter(getActivity(), tabTitles, fragments);
+        viewPager.setAdapter(adapter);
+        adapter.setupWithTabLayout(tabLayout, viewPager);
+
+
+
         setupTabIcons();
 
     }
@@ -179,6 +216,9 @@ public class HomeFragment extends Fragment {
         bgr=view.findViewById(R.id.backgroundHome);
         name=view.findViewById(R.id.fr_home_name);
         btn_choose=view.findViewById(R.id.fthome_btn_choose);
+        cP=view.findViewById(R.id.countPosts);
+        cFer=view.findViewById(R.id.countFollower);
+        cFing=view.findViewById(R.id.countFollowing);
     }
     private void setupTabIcons() {
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
@@ -225,7 +265,6 @@ public class HomeFragment extends Fragment {
         choose2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 dialog.dismiss();
                 Toast.makeText(getActivity(),"Share is Clicked",Toast.LENGTH_SHORT).show();
 
@@ -245,7 +284,6 @@ public class HomeFragment extends Fragment {
         choose4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 dialog.dismiss();
                 startActivity(new Intent(getActivity(), AddProductActivity.class));
 
@@ -262,7 +300,6 @@ public class HomeFragment extends Fragment {
     private void selectIMG() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/* video/*"); // allow both images and videos
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivityForResult(intent, GALLERY_REQUEST_CODE);
     }
 
@@ -276,11 +313,13 @@ public class HomeFragment extends Fragment {
                 // This is an image
                 Uri imageUri = data.getData();
                 mediaUris.add(imageUri);
-            } else if (mimeType.startsWith("video")) {
+                System.out.println("cbas");
+            }if (mimeType.startsWith("video")) {
                 // This is a video
                 Uri videoUri = data.getData();
                 mediaUris.add(videoUri);
             }
+
             System.out.println(mediaUris.size());
             addPicVideoAdapter.update(mediaUris);
             final Dialog dialogAddPicVideo1 = new Dialog(getActivity());
@@ -294,12 +333,13 @@ public class HomeFragment extends Fragment {
             recyclerView.setAdapter(addPicVideoAdapter);
             System.out.println(mediaUris.size());
             if (!dialogAddPicVideo1.isShowing()) {
-                dialogAddPicVideo1.dismiss();
                 dialogAddPicVideo1.show();
             }
 
             TextView btn_add = dialogAddPicVideo1.findViewById(R.id.addpicvideos_2_add);
             TextView btnSave=dialogAddPicVideo1.findViewById(R.id.addpicvideo_btn_save);
+            EditText edtdes= dialogAddPicVideo1.findViewById(R.id.addpicvideo_edt_des);
+            EditText edttit= dialogAddPicVideo1.findViewById(R.id.addpicvideo_edt_title);
             TextView btnCancel = dialogAddPicVideo1.findViewById(R.id.addpicvideo_btn_cancel);
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -313,49 +353,57 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     progressDialog.show();
-                    List<String> linkList = new ArrayList<>();
-                    String time= String.valueOf(System.currentTimeMillis());
-                    kt=0;
-                    for (int i = 0; i < mediaUris.size(); i++) {
-                        Uri mediaUri = mediaUris.get(i);
-                        int j=i;
-                        String fileName = "media_" + System.currentTimeMillis() + "_" + i;
-                        StorageReference fileRef = storageReference.child(fileName);
-                        fileRef.putFile(mediaUri)
-                                .addOnSuccessListener(taskSnapshot -> {
-                                    // File uploaded successfully
-                                    fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                                        // Get download URL
-                                        String downloadUrl = uri.toString();
-                                        String mimeType = getContext().getContentResolver().getType(mediaUri);
-                                        if (mimeType.startsWith("image")) {
-                                            databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("l").setValue("img");
-                                            databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("link").setValue(downloadUrl);
-                                        }else{
-                                            databaseReference.child("Videos_Account").child(Data.dataPhone).child(time).child("url").setValue(downloadUrl);
-                                            databaseReference.child("Videos").push().child("url").setValue(downloadUrl);
-                                            databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("l").setValue("video");
-                                            databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("link").setValue(downloadUrl);
-                                        }
-                                        kt++;
-                                        linkList.add(downloadUrl);
-                                        System.out.println(downloadUrl);
-                                    });
-                                })
-                                .addOnFailureListener(exception -> {
-                                    // File upload failed
-                                    Log.e(TAG, "File upload failed: " + exception.getMessage());
-                                    kt=-1;
-                                    Toast.makeText(getContext(),"Đã xảy ra lỗi, vui lòng thử lại",Toast.LENGTH_SHORT).show();
-                                    progressDialog.dismiss();
-                                }).addOnCompleteListener(task -> {
-                                    // File upload completed (regardless of success or failure)
-                                    if (kt==mediaUris.size()-1) {
-                                        Toast.makeText(getContext(), "Thêm thành công", Toast.LENGTH_SHORT).show();
+                    if (edttit.getText().equals("") || edtdes.getText().equals("")){
+                        Toast.makeText(getContext(),"Vui lòng nhập đủ thông tin",Toast.LENGTH_SHORT).show();
+                    }else{
+                        List<String> linkList = new ArrayList<>();
+                        String time= String.valueOf(System.currentTimeMillis());
+                        kt=0;
+                        for (int i = 0; i < mediaUris.size(); i++) {
+                            Uri mediaUri = mediaUris.get(i);
+                            int j=i;
+                            String fileName = "media_" + System.currentTimeMillis() + "_" + i;
+                            StorageReference fileRef = storageReference.child(fileName);
+                            fileRef.putFile(mediaUri)
+                                    .addOnSuccessListener(taskSnapshot -> {
+                                        // File uploaded successfully
+                                        fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                                            // Get download URL
+                                            String downloadUrl = uri.toString();
+                                            String mimeType = getContext().getContentResolver().getType(mediaUri);
+                                            if (mimeType.startsWith("image")) {
+                                                databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("l").setValue("img");
+                                                databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("link").setValue(downloadUrl);
+                                            }else{
+                                                databaseReference.child("Videos_Account").child(Data.dataPhone).child(time).child("url").setValue(downloadUrl);
+                                                databaseReference.child("Videos_Account").child(Data.dataPhone).child(time).child("title").setValue(edttit.getText().toString());
+                                                databaseReference.child("Videos_Account").child(Data.dataPhone).child(time).child("des").setValue(edtdes.getText().toString());
+                                                databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("l").setValue("video");
+                                                databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("link").setValue(downloadUrl);
+                                            }
+                                            databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("title").setValue(edttit.getText().toString());
+                                            databaseReference.child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("des").setValue(edtdes.getText().toString());
+//                                            databaseReference.child("LikeCommentMedia").child(Data.dataPhone).child(time).child("like")
+                                            kt++;
+                                            linkList.add(downloadUrl);
+                                            System.out.println(downloadUrl);
+                                        });
+                                    })
+                                    .addOnFailureListener(exception -> {
+                                        // File upload failed
+                                        Log.e(TAG, "File upload failed: " + exception.getMessage());
+                                        kt=-1;
+                                        Toast.makeText(getContext(),"Đã xảy ra lỗi, vui lòng thử lại",Toast.LENGTH_SHORT).show();
                                         progressDialog.dismiss();
-                                        dialogAddPicVideo1.dismiss();
-                                    }
-                                });
+                                    }).addOnCompleteListener(task -> {
+                                        // File upload completed (regardless of success or failure)
+                                        if (kt==mediaUris.size()-1) {
+                                            Toast.makeText(getContext(), "Thêm thành công", Toast.LENGTH_SHORT).show();
+                                            progressDialog.dismiss();
+                                            dialogAddPicVideo1.dismiss();
+                                        }
+                                    });
+                        }
                     }
 
                 }

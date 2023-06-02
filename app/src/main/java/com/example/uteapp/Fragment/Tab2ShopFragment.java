@@ -28,14 +28,13 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Tab1Fragment#newInstance} factory method to
+ * Use the {@link Tab2ShopFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Tab1Fragment extends Fragment {
+public class Tab2ShopFragment extends Fragment {
     DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
     Tab1Adapter adapter;
     List<PicVideos> data = new ArrayList<PicVideos>();
-
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,13 +45,8 @@ public class Tab1Fragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public Tab1Fragment() {
+    public Tab2ShopFragment() {
         // Required empty public constructor
-    }
-    public Tab1Fragment(List<PicVideos> data) {
-        // Required empty public constructor
-        this.data=data;
-        adapter=new Tab1Adapter(data,getContext());
     }
 
     /**
@@ -61,11 +55,11 @@ public class Tab1Fragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Tab1Fragment.
+     * @return A new instance of fragment Tab2ShopFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static Tab1Fragment newInstance(String param1, String param2) {
-        Tab1Fragment fragment = new Tab1Fragment();
+    public static Tab2ShopFragment newInstance(String param1, String param2) {
+        Tab2ShopFragment fragment = new Tab2ShopFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -86,29 +80,33 @@ public class Tab1Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tab1, container, false);
+        return inflater.inflate(R.layout.fragment_tab2_shop, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        databaseReference.child("Media").child(Data.dataPhone).addValueEventListener(new ValueEventListener() {
+        String UID=getActivity().getIntent().getStringExtra("uid");
+        databaseReference.child("LikeInfor").child(UID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int i=0;
-                data.clear();
-                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    i++;
-                    PicVideos picVideos = new PicVideos();
+                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    int i=0;
+                    data.clear();
                     for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                        picVideos.setLink(dataSnapshot1.child("link").getValue(String.class));
-                        picVideos.setLoai(dataSnapshot1.child("l").getValue(String.class));
-                        picVideos.setTitle(dataSnapshot1.child("title").getValue(String.class));
-                        picVideos.setDes(dataSnapshot1.child("des").getValue(String.class));
+                        i++;
+                        PicVideos picVideos = new PicVideos();
+                        for (DataSnapshot dataSnapshot2:dataSnapshot1.getChildren()){
+                            picVideos.setLink(dataSnapshot2.child("link").getValue(String.class));
+                            picVideos.setLoai(dataSnapshot2.child("l").getValue(String.class));
+                            picVideos.setTitle(dataSnapshot2.child("title").getValue(String.class));
+                            picVideos.setDes(dataSnapshot2.child("des").getValue(String.class));
+                            System.out.println(dataSnapshot2.getRef());
+                        }
+                        data.add(picVideos);
                     }
-                    data.add(picVideos);
+                    adapter.update(data);
                 }
-                adapter.update(data);
             }
 
             @Override
@@ -117,27 +115,14 @@ public class Tab1Fragment extends Fragment {
             }
         });
 
-
         System.out.println(data.size());
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_tab1);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_tab2Shop);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false);
-//        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-//            @Override
-//            public int getSpanSize(int position) {
-//                return 1;
-//            }
-//        });
 
         recyclerView.setLayoutManager(layoutManager);
         adapter = new Tab1Adapter(data,getContext());
         adapter.update(data);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
 }
