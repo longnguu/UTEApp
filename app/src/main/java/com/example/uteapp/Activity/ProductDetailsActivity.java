@@ -92,7 +92,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
                 CartList cartList = new CartList(maSP,namesp,String.valueOf(slg),"0",giasp,uid,img);
                 cartList.setSlb(slcSP);
                 Toast.makeText(ProductDetailsActivity.this, "Đã thêm", Toast.LENGTH_SHORT).show();
-                databaseReference.child("GioHang").child(mobile).child(maSP).setValue(cartList);
+                databaseReference.child("GioHang").child(Data.dataPhone).child(maSP).setValue(cartList);
             }
         });
 

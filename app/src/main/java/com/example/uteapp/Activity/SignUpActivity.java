@@ -34,7 +34,6 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (pass.getText().toString().equals(confirm_pass.getText().toString())){
-                    System.out.println(pass.getText()+" "+mail.getText());
                     mAuth.createUserWithEmailAndPassword(mail.getText().toString(), pass.getText().toString())
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override

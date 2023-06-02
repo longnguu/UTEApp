@@ -20,6 +20,8 @@ import com.example.uteapp.Model.Data;
 import com.example.uteapp.Model.MessengerList;
 import com.example.uteapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +44,16 @@ public class HomeActivity extends AppCompatActivity {
     ImageView iconMess, iconCart;
     public static CardView unSeenMain;
     public static TextView textUnSeenMain;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(Data.datalog == 0){
+            Intent intent = new Intent(HomeActivity.this,MessengerActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

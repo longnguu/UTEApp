@@ -85,11 +85,10 @@ public class MessengerActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 final String profilePicUrl = snapshot.child("users").child(Data.dataPhone).child("imgUS").getValue(String.class);
-
                 if (!profilePicUrl.isEmpty()) {
                     Picasso.get().load(profilePicUrl).into(profilePic);
                 }
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
             }
 
             @Override
@@ -216,5 +215,11 @@ public class MessengerActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+        if(Data.datalog == 0){
+            Intent intent = new Intent(MessengerActivity.this,HomeActivity.class);
+            Data.datalog=1;
+            startActivity(intent);
+            finish();
+        }
     }
 }
