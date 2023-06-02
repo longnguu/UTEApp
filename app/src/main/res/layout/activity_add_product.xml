@@ -27,7 +27,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/border_bo"
-                android:id="@+id/addproduct_imgView"/>
+                android:id="@+id/addproduct_imgView"
+                android:visibility="gone"/>
             <LinearLayout
                 android:id="@+id/addproduct_linearbtn"
                 android:layout_width="match_parent"
@@ -64,7 +65,6 @@
             android:textStyle="bold"
             android:text="Product name"/>
         <EditText
-            android:id="@+id/addSP_Ten"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/border_bo"/>
@@ -77,8 +77,7 @@
             android:textColor="@color/black"
             android:textStyle="bold"
             android:text="Product category"/>
-        <EditText
-            android:id="@+id/addSP_Category"
+        <Spinner
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/border_bo"/>
@@ -92,7 +91,6 @@
             android:textStyle="bold"
             android:text="Add description"/>
         <EditText
-            android:id="@+id/addSP_Mota"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:background="@drawable/border_bo"/>
@@ -167,13 +165,11 @@
             android:textColor="@color/black"
             android:textStyle="bold"
             android:text="Currentcy"/>
-        <EditText
-            android:id="@+id/addSP_SoLuong"
+        <Spinner
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/border_bo"/>
         <TextView
-
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -183,17 +179,9 @@
             android:textStyle="bold"
             android:text="Pricing"/>
         <EditText
-            android:id="@+id/addSP_Gia"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/border_bo"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="SAVe"
-            android:textColor="@color/black"
-            android:id="@+id/saveQLSP"
-            android:layout_marginBottom="10dp" />
 
     </LinearLayout>
 </ScrollView>

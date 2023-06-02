@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.uteapp.Model.Data;
 import com.example.uteapp.R;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,7 +55,6 @@ public class ProfileActivity extends AppCompatActivity {
         prSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(ProfileActivity.this, SignInActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
