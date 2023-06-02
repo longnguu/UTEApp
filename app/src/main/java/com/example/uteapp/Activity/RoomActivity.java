@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -19,7 +22,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -64,6 +69,7 @@ public class RoomActivity extends AppCompatActivity {
     TextView roomName;
     ImageView bgrr;
     CardView btn_choose;
+    TextView RID;
     Dialog dialog;
     final int GALLERY_REQUEST_CODE=124213;
     int kt=0;
@@ -77,6 +83,7 @@ public class RoomActivity extends AppCompatActivity {
         userRecyclerView = findViewById(R.id.nguoiDungRoom);
         roomName = findViewById(R.id.fr_room_name);
         bgrr = findViewById(R.id.backgroundRoom);
+        RID=findViewById(R.id.roomID);
         btn_choose=findViewById(R.id.room_btn_choose);
         picVideoRecyclerView = findViewById(R.id.picVideoRecycler);
         nguoiDungRoomAdapter = new NguoiDungRoomAdapter(userListRooms, RoomActivity.this);
@@ -91,6 +98,18 @@ public class RoomActivity extends AppCompatActivity {
         progressDialog.setMessage("Loading...");
 
         recyclerPicVideos();
+
+
+        registerForContextMenu(RID); // Đăng ký Context Menu cho TextView
+
+        RID.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                // Hiển thị Context Menu khi long click vào TextView
+                view.showContextMenu();
+                return true;
+            }
+        });
 
 
         btn_choose.setOnClickListener(new View.OnClickListener() {
@@ -137,6 +156,7 @@ public class RoomActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 roomName.setText(snapshot.child("tenNhom").getValue(String.class));
                 Picasso.get().load(snapshot.child("avt").getValue(String.class)).into(bgrr);
+                RID.setText(snapshot.child("key").getValue(String.class));
             }
 
             @Override
@@ -247,7 +267,6 @@ public class RoomActivity extends AppCompatActivity {
                                             }
                                             databaseReference.child("RoomMedia").child(roomKey).child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("title").setValue(edttit.getText().toString());
                                             databaseReference.child("RoomMedia").child(roomKey).child("Media").child(Data.dataPhone).child(time).child(String.valueOf(j)).child("des").setValue(edtdes.getText().toString());
-//                                            databaseReference.child("LikeCommentMedia").child(Data.dataPhone).child(time).child("like")
                                             kt++;
                                             linkList.add(downloadUrl);
                                         });
@@ -287,21 +306,24 @@ public class RoomActivity extends AppCompatActivity {
         }
     }
     public void recyclerPicVideos(){
-        databaseReference.child("RoomMedia").child(roomKey).child("Media").child(Data.dataPhone).addValueEventListener(new ValueEventListener() {
+        databaseReference.child("RoomMedia").child(roomKey).child("Media").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int i=0;
-                data.clear();
-                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    i++;
-                    PicVideos picVideos = new PicVideos();
-                    for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                        picVideos.setLink(dataSnapshot1.child("link").getValue(String.class));
-                        picVideos.setLoai(dataSnapshot1.child("l").getValue(String.class));
-                        picVideos.setTitle(dataSnapshot1.child("title").getValue(String.class));
-                        picVideos.setDes(dataSnapshot1.child("des").getValue(String.class));
+
+                for (DataSnapshot dataSnapshot2:snapshot.getChildren()) {
+                    int i = 0;
+                    data.clear();
+                    for (DataSnapshot dataSnapshot : dataSnapshot2.getChildren()) {
+                        i++;
+                        PicVideos picVideos = new PicVideos();
+                        for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                            picVideos.setLink(dataSnapshot1.child("link").getValue(String.class));
+                            picVideos.setLoai(dataSnapshot1.child("l").getValue(String.class));
+                            picVideos.setTitle(dataSnapshot1.child("title").getValue(String.class));
+                            picVideos.setDes(dataSnapshot1.child("des").getValue(String.class));
+                        }
+                        data.add(picVideos);
                     }
-                    data.add(picVideos);
                 }
                 adapter.update(data);
             }
@@ -320,6 +342,25 @@ public class RoomActivity extends AppCompatActivity {
         adapter.update(data);
         picVideoRecyclerView.setLayoutManager(layoutManager);
         picVideoRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_copy) {
+            // Sao chép nội dung của TextView vào Clipboard
+            ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clipData = ClipData.newPlainText("text", RID.getText().toString());
+            clipboardManager.setPrimaryClip(clipData);
+            Toast.makeText(this, "Copied to clipboard", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onContextItemSelected(item);
     }
 
     }

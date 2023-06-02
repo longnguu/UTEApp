@@ -11,15 +11,18 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <SearchView
-            android:queryHint="Nhập từ khóa ..."
             android:id="@+id/RoomSearchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@color/white100"
-            android:searchIcon="@drawable/search_24px">
-        </SearchView>
+            android:queryHint="Nhập từ khóa ..."
+            android:searchIcon="@drawable/search_24px"></SearchView>
         <androidx.recyclerview.widget.RecyclerView
             android:layout_below="@id/RoomSearchView"
             android:id="@+id/RoomRecyclerView"
