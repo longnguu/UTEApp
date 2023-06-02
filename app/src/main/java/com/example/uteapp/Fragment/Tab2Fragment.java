@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.uteapp.Adapter.Tab1Adapter;
+import com.example.uteapp.Adapter.Tab2Adapter;
 import com.example.uteapp.Model.Data;
 import com.example.uteapp.Model.PicVideos;
 import com.example.uteapp.R;
@@ -33,7 +34,7 @@ import java.util.List;
  */
 public class Tab2Fragment extends Fragment {
     DatabaseReference databaseReference= FirebaseDatabase.getInstance().getReference();
-    Tab1Adapter adapter;
+    Tab2Adapter adapter;
     List<PicVideos> data = new ArrayList<PicVideos>();
 
     // TODO: Rename parameter arguments, choose names that match
@@ -123,7 +124,7 @@ public class Tab2Fragment extends Fragment {
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false);
 
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new Tab1Adapter(data,getContext());
+        adapter = new Tab2Adapter(data,getContext());
         adapter.update(data);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

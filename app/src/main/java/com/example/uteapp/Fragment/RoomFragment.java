@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.uteapp.Activity.AddProductActivity;
@@ -39,6 +40,7 @@ import com.example.uteapp.Activity.EditProfileActivity;
 import com.example.uteapp.Adapter.RoomAdapter;
 import com.example.uteapp.Model.Data;
 import com.example.uteapp.Model.RoomList;
+import com.example.uteapp.Model.SanPham;
 import com.example.uteapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -80,6 +82,8 @@ public class RoomFragment extends Fragment {
     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     StorageReference storageReference= firebaseStorage.getReference();
     String fileUrl;
+    SearchView searchView;
+    CardView cardViewRecy;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -131,12 +135,29 @@ public class RoomFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        searchView = view.findViewById(R.id.RoomSearchView);
         btnTaoNhom = view.findViewById(R.id.froom_btn_choose);
         recyclerView=view.findViewById(R.id.RoomRecyclerView);
+        cardViewRecy = (CardView) view.findViewById(R.id.cardrecycler);
         roomAdapter = new RoomAdapter(roomLists,getContext());
         linearLayoutManager = new GridLayoutManager(getContext(),1, RecyclerView.VERTICAL,false);
         recyclerView.setAdapter(roomAdapter);
         recyclerView.setLayoutManager(linearLayoutManager);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                callQuery(s);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                callQuery(s);
+                return false;
+            }
+        });
+
         databaseReference.child("Room").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -308,4 +329,25 @@ public class RoomFragment extends Fragment {
                 return bitmap;
         }
     }
+    private void callQuery(String s) {
+        databaseReference.child("Room").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                roomLists.clear();
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    String name = dataSnapshot.child("tenNhom").getValue(String.class).toUpperCase();
+                    String namee = dataSnapshot.child("key").getValue(String.class).toUpperCase();
+                    if (s == "" ||s== null|| name.contains(s.toUpperCase()) || namee.contains(s.toUpperCase())) {
+                        RoomList roomList = dataSnapshot.getValue(RoomList.class);
+                        roomLists.add(roomList);
+                    }
+                }
+                roomAdapter.updateSanPham(roomLists);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
 }
