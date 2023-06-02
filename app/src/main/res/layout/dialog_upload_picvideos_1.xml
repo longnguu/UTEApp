@@ -60,15 +60,6 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/edt_btn_openCam"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:drawableLeft="@drawable/icon_cloud_upload"
-                    android:text="  Open\ncamera"
-                    android:textColor="@color/black" />
-
-                <Button
                     android:id="@+id/edt_btn_openGal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

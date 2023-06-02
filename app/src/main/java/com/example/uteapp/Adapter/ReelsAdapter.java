@@ -84,9 +84,6 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
         holder.des.setText(data.getDes().get(0));
         holder.title.setText(data.getTitle().get(0));
         Picasso.get().load(data.getAvt()).into(holder.avt);
-        System.out.println("kkk"+data.getAvt());
-        if (data.getTitle().get(0)!="")
-            System.out.println(data.getTitle());
         holder.photoAdapter= new PhotoAdapter(context,data.getLoai(),data.getLink());
         holder.viewPager.setAdapter(holder.photoAdapter);
         holder.circleIndicator.setViewPager(holder.viewPager);
@@ -95,7 +92,6 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue()!=null) {
-                    System.out.println(dataSnapshot.getRef());
                     holder.like.setImageResource(R.drawable.icon_favourite_red);
                 } else {
                     holder.like.setImageResource(R.drawable.icon_favourite);
@@ -203,7 +199,6 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
         holder.databaseReference.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("comment").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                System.out.println(snapshot.getRef());
                 Long likeValue = Long.valueOf(String.valueOf(snapshot.getChildrenCount()));
                 // Do something with the retrieved value
                 if (likeValue!=null){
@@ -327,15 +322,8 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             commentList.setName(snapshot.child("tenUser").getValue().toString());
                             commentList.setAvt(snapshot.child("imgUS").getValue().toString());
-//                            if(holder.commentLists.size()>cmtValue) {
-//                                System.out.println(cmtValue+"cmtV");
-//                                holder.commentLists.clear();
-//                                holder.commentLists.add(commentListsss.get(0));
-//                                System.out.println(commentListsss.get(0).getCmt()+"  cmt0");
-//                            }
                             commentList.setDataKey(data.getParentKey());
                             commentListsss.add(commentList);
-                            System.out.println(commentListsss.size()+"  "+holder.commentLists.size()+"  "+cmtValue);
                             holder.commentLists.add(commentList);
                         }
                         @Override

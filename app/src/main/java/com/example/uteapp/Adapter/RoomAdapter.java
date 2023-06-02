@@ -3,6 +3,7 @@ package com.example.uteapp.Adapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.uteapp.Activity.RoomActivity;
 import com.example.uteapp.Model.Data;
 import com.example.uteapp.Model.RoomList;
 import com.example.uteapp.Model.SanPham;
@@ -100,7 +102,9 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
                     AlertDialog dialog = builder.create();
                     dialog.show();
                 }else {
-
+                    Intent intent=new Intent(context, RoomActivity.class);
+                    intent.putExtra("roomid",roomList.getKey());
+                    context.startActivity(intent);
                 }
             }
         });

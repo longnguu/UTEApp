@@ -233,8 +233,6 @@ public class HomeFragment extends Fragment {
         dialog.setContentView(R.layout.layout_bottom_sheet);
 
         LinearLayout choose1 = dialog.findViewById(R.id.choose_1);
-        LinearLayout choose2 = dialog.findViewById(R.id.choose_2);
-        LinearLayout choose3 = dialog.findViewById(R.id.choose_3);
         LinearLayout choose4 = dialog.findViewById(R.id.choose_4);
 
         choose1.setOnClickListener(new View.OnClickListener() {
@@ -257,29 +255,9 @@ public class HomeFragment extends Fragment {
                         selectIMG();
                     }
                 });
-
-
             }
         });
 
-        choose2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                Toast.makeText(getActivity(),"Share is Clicked",Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-        choose3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-                Toast.makeText(getActivity(),"Upload is Clicked",Toast.LENGTH_SHORT).show();
-
-            }
-        });
 
         choose4.setOnClickListener(new View.OnClickListener() {
             @Override
