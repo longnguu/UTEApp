@@ -43,40 +43,79 @@ public class ReelActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         viewPager2 = findViewById(R.id.vpager);
         reelsAdapter = new ReelsAdapter(picVideos,ReelActivity.this);
+
+
         String dataIn = getIntent().getStringExtra("data");
         String UID;
         if (getIntent().getStringExtra("d").equals("1")){
             UID=getIntent().getStringExtra("uid");
         }
         else UID=Data.dataPhone;
-        databaseReference.child("Media").child(UID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int i=0;
-                picVideos.clear();
-                for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    PicVideos picVideoss = new PicVideos();
-                    picVideoss.setAvt(Data.dataAVT);
-                    picVideoss.setParentKey(snapshot.getKey());
-                    picVideoss.setKey(dataSnapshot.getKey());
-                    for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
-                        picVideoss.setLink(dataSnapshot1.child("link").getValue(String.class));
-                        picVideoss.setLoai(dataSnapshot1.child("l").getValue(String.class));
-                        picVideoss.setDes(dataSnapshot1.child("des").getValue(String.class));
-                        picVideoss.setTitle(dataSnapshot1.child("title").getValue(String.class));
+        if  (!getIntent().getStringExtra("d").equals("3")){
+            databaseReference.child("Media").child(UID).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    int i=0;
+                    picVideos.clear();
+                    for (DataSnapshot dataSnapshot:snapshot.getChildren()){
+                        PicVideos picVideoss = new PicVideos();
+                        picVideoss.setAvt(Data.dataAVT);
+                        picVideoss.setParentKey(snapshot.getKey());
+                        picVideoss.setKey(dataSnapshot.getKey());
+                        for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
+                            picVideoss.setLink(dataSnapshot1.child("link").getValue(String.class));
+                            picVideoss.setLoai(dataSnapshot1.child("l").getValue(String.class));
+                            picVideoss.setDes(dataSnapshot1.child("des").getValue(String.class));
+                            picVideoss.setTitle(dataSnapshot1.child("title").getValue(String.class));
+                        }
+                        if (picVideoss.getLink().get(0).equals(dataIn)){
+                            picVideos.add(0,picVideoss);
+                        }else
+                            picVideos.add(picVideoss);
                     }
-                    if (picVideoss.getLink().get(0).equals(dataIn)){
-                        picVideos.add(0,picVideoss);
-                    }else
-                        picVideos.add(picVideoss);
+                    reelsAdapter.updateAdapter(picVideos);
                 }
-                reelsAdapter.updateAdapter(picVideos);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                }
+            });
+        }else{
+            String roomKey=getIntent().getStringExtra("roomKey");
+            databaseReference.child("RoomMedia").child(roomKey).child("Media").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    System.out.println(snapshot.getRef());
+                    int i=0;
+                    picVideos.clear();
+                    for (DataSnapshot dataSnapshot2:snapshot.getChildren()) {
+                        for (DataSnapshot dataSnapshot : dataSnapshot2.getChildren()) {
+                            PicVideos picVideoss = new PicVideos();
+                            picVideoss.setAvt(Data.dataAVT);
+                            picVideoss.setParentKey(snapshot.getKey());
+                            picVideoss.setKey(dataSnapshot.getKey());
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                picVideoss.setLink(dataSnapshot1.child("link").getValue(String.class));
+                                picVideoss.setLoai(dataSnapshot1.child("l").getValue(String.class));
+                                picVideoss.setDes(dataSnapshot1.child("des").getValue(String.class));
+                                picVideoss.setTitle(dataSnapshot1.child("title").getValue(String.class));
+                            }
+                            if (picVideoss.getLink().get(0).equals(dataIn)) {
+                                picVideos.add(0, picVideoss);
+                            } else
+                                picVideos.add(picVideoss);
+                            System.out.println(picVideos.size());
+                        }
+                    }
+                    reelsAdapter.updateAdapter(picVideos);
+
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
         viewPager2.setAdapter(reelsAdapter);
 
     }

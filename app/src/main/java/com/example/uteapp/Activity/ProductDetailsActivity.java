@@ -160,10 +160,13 @@ public class ProductDetailsActivity extends AppCompatActivity {
                         kt=true;
                         chatKey= String.valueOf(snapshot.getChildrenCount()+1);
                         for (DataSnapshot dataSnapshot:snapshot.getChildren()){
-                            if((dataSnapshot.child("user_1").getValue(String.class).equals(Data.dataPhone)  &&  dataSnapshot.child("user_2").getValue(String.class).equals(uid))
-                                    || (dataSnapshot.child("user_1").getValue(String.class).equals(uid)     &&  dataSnapshot.child("user_2").getValue(String.class).equals(Data.dataPhone))){
-                                chatKey=dataSnapshot.getKey();
-                                kt=false;
+                            if((dataSnapshot.hasChild("user_1")) && (dataSnapshot.hasChild("user_2"))){
+                                if((dataSnapshot.child("user_1").getValue(String.class).equals(Data.dataPhone)  &&  dataSnapshot.child("user_2").getValue(String.class).equals(uid))
+                                        || (dataSnapshot.child("user_1").getValue(String.class).equals(uid)     &&  dataSnapshot.child("user_2").getValue(String.class).equals(Data.dataPhone))){
+                                    System.out.println("abcChatKey");
+                                    chatKey=dataSnapshot.getKey();
+                                    kt=false;
+                                }
                             }
                         }
                         if (!kt){
