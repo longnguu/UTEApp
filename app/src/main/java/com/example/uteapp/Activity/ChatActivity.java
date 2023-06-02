@@ -100,7 +100,6 @@ public class ChatActivity extends AppCompatActivity {
                                 final String getMsg = chatSnapshot.child("msg").getValue(String.class);
 
                                 Timestamp timestamp = new Timestamp(Long.parseLong(messengerTimeStamps));
-                                System.out.println(timestamp);
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
                                 SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("hh:mm aa");
                                 System.out.println(simpleDateFormat+"abc"+simpleTimeFormat);
