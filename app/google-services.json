@@ -1,42 +1,33 @@
 {
   "project_info": {
-    "project_number": "844903959854",
-    "firebase_url": "https://uteapp-40bf0-default-rtdb.firebaseio.com",
-    "project_id": "uteapp-40bf0",
-    "storage_bucket": "uteapp-40bf0.appspot.com"
+    "project_number": "416909913895",
+    "project_id": "uteapp-77971",
+    "storage_bucket": "uteapp-77971.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:844903959854:android:3f51a424cd759c66ed7ebf",
+        "mobilesdk_app_id": "1:416909913895:android:cba98a492478235b618302",
         "android_client_info": {
           "package_name": "com.example.uteapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "844903959854-pdd86s2q0ll8l9uoukmh474oirfcu53t.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.uteapp",
-            "certificate_hash": "d1733baebe01edc75795ca79350f7f8ed70933ff"
-          }
-        },
-        {
-          "client_id": "844903959854-so0g2dkopc1gpq0aphb0updeerl233am.apps.googleusercontent.com",
+          "client_id": "416909913895-rosgjqh40cfdgaphnvvtldn8kgqjal3e.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDCNflAwgOph187Z-7j6-b9kYvrLsdoNqg"
+          "current_key": "AIzaSyDE1dzpposY8N5zJSUrOr_oHFoU0h7uDUs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "844903959854-cd9smcpspod2hb5tvjmkni2o3nbgqsja.apps.googleusercontent.com",
+              "client_id": "416909913895-rosgjqh40cfdgaphnvvtldn8kgqjal3e.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
