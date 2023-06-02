@@ -4,31 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="2.5dp"
-    android:background="#EFECEC">
+    android:background="#EFECEC"
+    android:padding="2.5dp">
 
     <LinearLayout
 
         android:id="@+id/layoutItemSP"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#fff">
+        android:background="#fff"
+        android:orientation="vertical">
 
 
-            <ImageView
-                android:id="@+id/imgSP"
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop" />
+        <ImageView
+            android:id="@+id/imgSP"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop" />
 
         <TextView
             android:id="@+id/tenSP"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
             android:includeFontPadding="false"
             android:maxLines="2"
             android:text="Quần Jean Form SlimFit"

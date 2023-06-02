@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragment.RoomFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
-
-</FrameLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <SearchView
+            android:queryHint="Nhập từ khóa ..."
+            android:id="@+id/RoomSearchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/white100"
+            android:searchIcon="@drawable/search_24px">
+        </SearchView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_below="@id/RoomSearchView"
+            android:id="@+id/RoomRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </androidx.recyclerview.widget.RecyclerView>
+    </RelativeLayout>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/froom_btn_choose"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:cardCornerRadius="50dp"
+        android:layout_margin="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        app:cardBackgroundColor="@color/red">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:src="@drawable/icon_add">
+        </ImageView>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

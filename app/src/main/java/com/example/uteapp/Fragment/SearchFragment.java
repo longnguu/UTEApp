@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.uteapp.Adapter.SanPhamAdapter;
@@ -40,6 +42,9 @@ public class SearchFragment extends Fragment {
     public static SanPhamAdapter sanPhamAdapter;
     RecyclerView recyclerView,recyclerViewSP, recyclerViewDMSP;
     LinearLayoutManager linearLayoutManager;
+    RecyclerView recyclerViewSearch;
+    CardView cardViewRecy;
+    SearchView searchView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -87,13 +92,35 @@ public class SearchFragment extends Fragment {
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Loading...");
-
+        cardViewRecy = (CardView) view.findViewById(R.id.cardrecycler);
+        searchView = (SearchView) view.findViewById(R.id.topSearchView);
         recyclerViewSP= view.findViewById(R.id.search_recyclerView);
+        recyclerViewSearch = (RecyclerView) view.findViewById(R.id.recycleViewMainSearch);
         sanPhams=new ArrayList<>();
         sanPhamAdapter=new SanPhamAdapter(sanPhams,getContext());
         linearLayoutManager = new GridLayoutManager(getContext(),2, RecyclerView.VERTICAL,false);
         recyclerViewSP.setAdapter(sanPhamAdapter);
         recyclerViewSP.setLayoutManager(linearLayoutManager);
+        GridLayoutManager linearLayoutManager = new GridLayoutManager(getActivity(), 2, RecyclerView.VERTICAL, false);
+        recyclerViewSearch.setAdapter(sanPhamAdapter);
+        recyclerViewSearch.setLayoutManager(linearLayoutManager);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                callQuery(s);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                callQuery(s);
+                System.out.println(s);
+                if (s.isEmpty())
+                    cardViewRecy.setVisibility(View.GONE);
+                else cardViewRecy.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
 
         update();
     }
@@ -165,5 +192,38 @@ public class SearchFragment extends Fragment {
                 progressDialog.dismiss();
             }
         });
+    }
+    private void callQuery(String s) {
+        databaseReference.child("SanPham").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                sanPhams.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        String name=dataSnapshot1.child("ten").getValue(String.class).toUpperCase();
+                        String name1=s.toUpperCase();
+                        if (name.contains(name1)){
+                            System.out.println(dataSnapshot1.getRef() + " acd");
+                            String ten = dataSnapshot1.child("ten").getValue(String.class);
+                            SanPham sanPham = new SanPham(ten);
+                            sanPham.setImg(dataSnapshot1.child("img").getValue(String.class));
+                            sanPham.setMaSP(dataSnapshot1.getKey());
+                            sanPham.setUID(dataSnapshot.getKey());
+                            sanPham.setMota(dataSnapshot1.child("mota").getValue(String.class));
+                            sanPham.setGia(dataSnapshot1.child("gia").getValue(String.class));
+                            sanPham.setDaBan(dataSnapshot1.child("daBan").getValue(String.class));
+                            sanPhams.add(sanPham);
+                        }
+                    }
+                    sanPhamAdapter.updateSanPham(sanPhams);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        recyclerViewSearch.setAdapter(sanPhamAdapter);
     }
 }

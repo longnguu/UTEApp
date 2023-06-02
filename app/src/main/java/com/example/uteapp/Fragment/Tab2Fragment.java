@@ -89,9 +89,10 @@ public class Tab2Fragment extends Fragment {
         databaseReference.child("LikeInfor").child(Data.dataPhone).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                data.clear();
                 for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                     int i=0;
-                    data.clear();
+
                     for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren()){
                         i++;
                         PicVideos picVideos = new PicVideos();
@@ -103,9 +104,12 @@ public class Tab2Fragment extends Fragment {
                             System.out.println(dataSnapshot2.getRef());
                         }
                         data.add(picVideos);
+                        System.out.println(picVideos.getLink());
+                        System.out.println("abc  "+picVideos.getSize());
+                        System.out.println("abc  "+data.size());
                     }
-                    adapter.update(data);
                 }
+                adapter.update(data);
             }
 
             @Override

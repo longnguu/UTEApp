@@ -6,10 +6,41 @@
     tools:context=".Fragment.SearchFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <androidx.recyclerview.widget.RecyclerView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/search_recyclerView"/>
+        android:layout_height="match_parent">
+
+        <SearchView
+            android:id="@+id/topSearchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/white100"
+            android:queryHint="Nhập từ khóa ..."
+            android:searchIcon="@drawable/search_24px"></SearchView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_below="@+id/topSearchView"
+            android:layout_height="match_parent"
+            android:id="@+id/search_recyclerView"/>
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/topSearchView"
+            android:id="@+id/cardrecycler"
+            android:visibility="gone">
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/topnav"
+                android:layout_above="@+id/navnav"
+                android:id="@+id/recycleViewMainSearch" />
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
+
 
 
 </FrameLayout>
