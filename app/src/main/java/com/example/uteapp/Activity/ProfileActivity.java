@@ -23,6 +23,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     TextView prProfile,prEmail,prPhone,prAddress,prSignOut;
     ImageView imgProfile,imgBackground;
+    TextView tvName,tvID;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
     @Override
@@ -37,6 +38,8 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Picasso.get().load(snapshot.child("imgUS").getValue().toString()).into(imgProfile);
+                tvName.setText(snapshot.child("tenUser").getValue().toString());
+                tvID.setText(snapshot.child("email").getValue().toString());
             }
 
             @Override
@@ -71,5 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
         prAddress = (TextView) findViewById(R.id.prResidentialAddress);
         imgProfile=(ImageView) findViewById(R.id.imgProfile);
         prSignOut =(TextView) findViewById(R.id.prSignOut);
+        tvName=findViewById(R.id.profile_fullname);
+        tvID=findViewById(R.id.id_user);
     }
 }

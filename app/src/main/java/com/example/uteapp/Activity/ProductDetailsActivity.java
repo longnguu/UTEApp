@@ -158,7 +158,6 @@ public class ProductDetailsActivity extends AppCompatActivity {
                                 kt=false;
                             }
                         }
-                        System.out.println(chatKey);
                         if (!kt){
                             Intent intent = new Intent(ProductDetailsActivity.this,ChatActivity.class);
                             intent.putExtra("name",nameShop);
@@ -197,8 +196,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
         textViewGia.setText(giasp+" VNĐ");
 
         Picasso.get().load(img).into(imageView);
-        System.out.println(uid+":abc"+mobile);
-        if (uid.equals(mobile)){
+        if (uid.equals(Data.dataPhone)){
             btnchinhsua.setVisibility(View.VISIBLE);
             linearLayout.setVisibility(View.GONE);
         }else{

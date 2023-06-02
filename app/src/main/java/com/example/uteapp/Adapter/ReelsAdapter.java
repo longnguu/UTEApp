@@ -13,6 +13,8 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,6 +22,7 @@ import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -27,7 +30,10 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.uteapp.Activity.ChatActivity;
+import com.example.uteapp.Model.CommentList;
 import com.example.uteapp.Model.Data;
+import com.example.uteapp.Model.MemoryData;
 import com.example.uteapp.Model.PicVideos;
 import com.example.uteapp.Model.VideosModel;
 import com.example.uteapp.R;
@@ -43,8 +49,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.checkerframework.checker.units.qual.C;
+
 import java.io.File;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import me.relex.circleindicator.CircleIndicator;
 
@@ -67,7 +78,6 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.setData(videosModels.get(position));
 
         holder.progressBar.setVisibility(View.GONE);
         PicVideos data= videosModels.get(position);
@@ -97,6 +107,7 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
                 // Xử lý lỗi nếu có
             }
         });
+
         holder.databaseReference.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("like").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -111,6 +122,8 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
 
             }
         });
+        Update1(holder,data);
+
 
 
         holder.like.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +135,6 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
                     holder.databaseReference.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("like").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            System.out.println(snapshot.getRef());
                             holder.databaseReference1.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("like").child(Data.dataPhone).setValue("1");
                             Long likeValue = Long.valueOf(String.valueOf(snapshot.getChildrenCount()));
                             if (likeValue!=null){
@@ -134,6 +146,38 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
 
                         }
                     });
+
+                    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                    DatabaseReference sourceRef = firebaseDatabase.getReference("Media/"+data.getParentKey()+"/"+data.getKey());
+
+                    ValueEventListener valueEventListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    String key = snapshot.getKey(); // Lấy key của phần tử con
+                                    String des = snapshot.child("des").getValue(String.class);
+                                    String l = snapshot.child("l").getValue(String.class);
+                                    String link = snapshot.child("link").getValue(String.class);
+                                    String title = snapshot.child("title").getValue(String.class);
+
+                                    // Tạo địa chỉ đích dựa trên key của phần tử con
+                                    DatabaseReference destinationRef = firebaseDatabase.getReference("LikeInfor/"+Data.dataPhone+"/"+data.getParentKey()+"/"+data.getKey()+"/" + key);
+                                    destinationRef.child("des").setValue(des);
+                                    destinationRef.child("l").setValue(l);
+                                    destinationRef.child("link").setValue(link);
+                                    destinationRef.child("title").setValue(title);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // Xử lý lỗi nếu cần thiết
+                        }
+                    };
+                    sourceRef.addValueEventListener(valueEventListener);
+
                     holder.like.setImageResource(R.drawable.icon_favourite_red);
                 } else {
                     holder.databaseReference.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("like").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -144,6 +188,7 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
                             if (likeValue!=null){
                                 holder.tlike.setText(likeValue.toString());
                             }
+                            holder.databaseReference.child("LikeInfor").child(Data.dataPhone).child(data.getParentKey()).child(data.getKey()).removeValue();
                         }
 
                         @Override
@@ -155,7 +200,7 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
                 }
             }
         });
-        holder.databaseReference.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("comment").addListenerForSingleValueEvent(new ValueEventListener() {
+        holder.databaseReference.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("comment").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 System.out.println(snapshot.getRef());
@@ -175,14 +220,44 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
         holder.cmt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Dialog dialogAddPicVideo = new Dialog(context);
-                dialogAddPicVideo.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialogAddPicVideo.setContentView(R.layout.dialog_upload_picvideos_1);
-                dialogAddPicVideo.show();
-                dialogAddPicVideo.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                dialogAddPicVideo.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialogAddPicVideo.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-                dialogAddPicVideo.getWindow().setGravity(Gravity.BOTTOM);
+                final Dialog dialogCMT = new Dialog(context);
+                dialogCMT.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialogCMT.setContentView(R.layout.dialog_comment);
+                dialogCMT.show();
+                dialogCMT.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                dialogCMT.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialogCMT.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                dialogCMT.getWindow().setGravity(Gravity.BOTTOM);
+                RecyclerView dialogRecyclerView;
+
+                dialogRecyclerView=dialogCMT.findViewById(R.id.dialog_recyclerView);
+                dialogRecyclerView.setHasFixedSize(true);
+                dialogRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+                dialogRecyclerView.scrollToPosition(holder.commentLists.size()-1);
+
+
+                holder.commentAdapter = new CommentAdapter(holder.commentLists,context);
+                dialogRecyclerView.setAdapter(holder.commentAdapter);
+
+
+                ImageView btnSend=dialogCMT.findViewById(R.id.cmt_sendBtn);
+                EditText edt=dialogCMT.findViewById(R.id.cmt_edtCMT);
+                Update1(holder,data);
+                btnSend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final String getTxtMessenger = edt.getText().toString();
+                        final String currentTimeStamp= String.valueOf(System.currentTimeMillis());
+                        CommentList commentList1=new CommentList();
+                        commentList1.setKeyy(Data.dataPhone);
+                        commentList1.setCmt(getTxtMessenger);
+                        commentList1.setTime(currentTimeStamp);
+                        holder.databaseReference.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("comment").child(currentTimeStamp).setValue(commentList1);
+                        edt.setText("");
+                        dialogRecyclerView.scrollToPosition(holder.commentLists.size()-1);
+                        Update1(holder,data);
+                    }
+                });
             }
         });
 
@@ -198,7 +273,10 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
+        List<CommentList> commentLists=new ArrayList<>();
+        CommentAdapter commentAdapter=new CommentAdapter(commentLists,context);
         VideoView videoView;
+        Long cmtValue;
         TextView title,des,tlike,tcmt;
         ProgressBar progressBar;
         SurfaceView surfaceView;
@@ -225,56 +303,100 @@ public class ReelsAdapter extends RecyclerView.Adapter<ReelsAdapter.MyViewHolder
 
 
         }
-        void setData(PicVideos data){
-
-//            videoView.setVideoURI(Uri.parse(data.getUrl()));
-//            title.setText(data.getTitle());
-//            des.setText(data.getDes());
-
-
-//            videoView.setVisibility(View.GONE);
-//            SimpleExoPlayer player = new SimpleExoPlayer.Builder(context).build();
-//            Uri uri = Uri.parse(data.getUrl());
-//            MediaSource mediaSource = new ProgressiveMediaSource.Factory(new DefaultDataSourceFactory(context)).createMediaSource(uri);
-//
-//            player.setVideoSurfaceView(surfaceView);
-//            player.setMediaSource(mediaSource);
-//            player.prepare();
-//            player.setPlayWhenReady(true);
-//            player.addListener(new Player.EventListener() {
-//                @Override
-//                public void onLoadingChanged(boolean isLoading) {
-//                    if (isLoading) {
-//                        progressBar.setVisibility(View.VISIBLE);
-//                    } else {
-//                        progressBar.setVisibility(View.GONE);
-//                    }
-//                }
-//            });
-//            Glide.with(context)
-//                    .load(data.getUrl())
-//                    .downloadOnly(new SimpleTarget<File>() {
-//                        @Override
-//                        public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
-//                            // Lưu tệp vào bộ nhớ cache
-//                        }
-//                    });
-
-
-//            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                @Override
-//                public void onPrepared(MediaPlayer mediaPlayer) {
-//                    progressBar.setVisibility(View.GONE);
-//                    mediaPlayer.start();
-//                }
-//            });
-//            videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//                @Override
-//                public void onCompletion(MediaPlayer mediaPlayer) {
-//                    progressBar.setVisibility(View.GONE);
-//                    mediaPlayer.start();
-//                }
-//            });
-        }
     }
-}
+    void Update(MyViewHolder holder,PicVideos data){
+        holder.databaseReference.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("comment").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Long cmtValue=snapshot.getChildrenCount();
+                List<CommentList> commentListsss = new ArrayList<>();
+                holder.commentLists.clear();
+                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    CommentList commentList = new CommentList();
+                    commentList.setCmt(dataSnapshot.child("cmt").getValue().toString());
+                    commentList.setKeyy(dataSnapshot.child("keyy").getValue().toString());
+                    Timestamp timestamp = new Timestamp(Long.parseLong(dataSnapshot.child("time").getValue().toString()));
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("hh:mm aa");
+                    commentList.setCmt(dataSnapshot.child("cmt").getValue().toString());
+                    commentList.setKeyy(dataSnapshot.child("keyy").getValue().toString());
+                    commentList.setTime(simpleTimeFormat.format(timestamp));
+                    commentList.setDate(simpleDateFormat.format(timestamp));
+                    holder.databaseReference1.child("users").child(commentList.getKeyy()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            commentList.setName(snapshot.child("tenUser").getValue().toString());
+                            commentList.setAvt(snapshot.child("imgUS").getValue().toString());
+//                            if(holder.commentLists.size()>cmtValue) {
+//                                System.out.println(cmtValue+"cmtV");
+//                                holder.commentLists.clear();
+//                                holder.commentLists.add(commentListsss.get(0));
+//                                System.out.println(commentListsss.get(0).getCmt()+"  cmt0");
+//                            }
+                            commentListsss.add(commentList);
+                            System.out.println(commentListsss.size()+"  "+holder.commentLists.size()+"  "+cmtValue);
+                            holder.commentLists.add(commentList);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+                holder.commentAdapter.updateComment(holder.commentLists);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    void Update1(MyViewHolder holder,PicVideos data) {
+        holder.databaseReference.child("LikeCommentMedia").child(data.getParentKey()).child(data.getKey()).child("comment").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Long cmtValue = snapshot.getChildrenCount();
+                List<CommentList> commentLists = new ArrayList<>();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    CommentList commentList = new CommentList();
+                    commentList.setCmt(dataSnapshot.child("cmt").getValue().toString());
+                    commentList.setKeyy(dataSnapshot.child("keyy").getValue().toString());
+                    Timestamp timestamp = new Timestamp(Long.parseLong(dataSnapshot.child("time").getValue().toString()));
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                    SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("hh:mm aa");
+                    commentList.setTime(simpleTimeFormat.format(timestamp));
+                    commentList.setDate(simpleDateFormat.format(timestamp));
+                    holder.databaseReference1.child("users").child(commentList.getKeyy()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            CommentList updatedCommentList = new CommentList();
+                            updatedCommentList.setCmt(commentList.getCmt());
+                            updatedCommentList.setKeyy(commentList.getKeyy());
+                            updatedCommentList.setTime(commentList.getTime());
+                            updatedCommentList.setDate(commentList.getDate());
+                            updatedCommentList.setName(snapshot.child("tenUser").getValue().toString());
+                            updatedCommentList.setAvt(snapshot.child("imgUS").getValue().toString());
+                            commentLists.add(updatedCommentList);
+
+                            if (commentLists.size() == cmtValue) {
+                                holder.commentLists.clear();
+                                holder.commentLists.addAll(commentLists);
+                                holder.commentAdapter.updateComment(holder.commentLists);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    }
